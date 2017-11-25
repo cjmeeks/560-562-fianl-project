@@ -89,6 +89,63 @@ decodeResult =
         |> optional "coach_team" int -1
 
 
+type SearchType
+    = Like
+    | Number
+
+
+listOfQueryParams : List ( String, List ( String, SearchType ) )
+listOfQueryParams =
+    [ ( "Country"
+      , [ ( "country_name", Like )
+        , ( "country_continent", Like )
+        ]
+      )
+    , ( "League"
+      , [ ( "league_name", Like )
+        ]
+      )
+    , ( "People"
+      , [ ( "people_first_name", Like )
+        , ( "people_last_name", Like )
+        , ( "people_nationality", Like )
+        ]
+      )
+    , ( "Player"
+      , [ ( "player_number", Number )
+        , ( "player_position", Like )
+        ]
+      )
+    , ( "Stadium"
+      , [ ( "stadium_name", Like )
+        , ( "stadium_city", Like )
+        , ( "stadium_capacity", Number )
+        , ( "stadium_yearFounded", Number )
+        ]
+      )
+    , ( "Team"
+      , [ ( "team_name", Like )
+        , ( "team_yearFounded", Like )
+        ]
+      )
+    , ( "Contracts"
+      , [ ( "contract_salary", Number )
+        , ( "contract_years", Number )
+        ]
+      )
+    , ( "Season"
+      , [ ( "season_wins", Number )
+        , ( "season_losses", Number )
+        , ( "season_ties", Number )
+        ]
+      )
+    , ( "Coach"
+      , [ ( "coach_yearHired", Number )
+        ]
+      )
+    ]
+
+
 type alias Player =
     { people_id : Int
     , people_first_name : String
