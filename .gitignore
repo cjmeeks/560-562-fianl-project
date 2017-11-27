@@ -1,6 +1,5 @@
-elm-stuff/
-node_modules/
-tmp/
+node_modules
+elm-stuff
+.DS_Store
+server
 dist/
-yarn.lock
-
