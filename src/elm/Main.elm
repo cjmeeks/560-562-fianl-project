@@ -8,6 +8,8 @@ import Types exposing (Msg(..), Model, Player, Team, initModel)
 import Routes exposing (Route(..), parseLocation)
 import Bootstrap.CDN as CDN
 import Search
+import Player
+import Team
 
 
 main : Program Never Model Msg
@@ -72,16 +74,28 @@ view model =
                 , div [] [ text "profile" ]
                 ]
 
-        Search ->
+        PSearch ->
             div [ class "my-container" ]
                 [ nav
                 , Search.view
                 ]
 
-        Result ->
+        TSearch ->
             div [ class "my-container" ]
                 [ nav
-                , text "result"
+                , Search.view
+                ]
+
+        TeamResult ->
+            div [ class "my-container" ]
+                [ nav
+                , Team.teamTable model.teamResults
+                ]
+
+        PlayerResult ->
+            div [ class "my-container" ]
+                [ nav
+                , Player.playerTable model.playerResults
                 ]
 
 
@@ -91,6 +105,7 @@ nav =
         [ CDN.stylesheet
         , ul []
             [ li [] [ a [ href "#profile" ] [ text "Profile" ] ]
-            , li [] [ a [ href "#search" ] [ text "Search" ] ]
+            , li [] [ a [ href "#pSearch" ] [ text "Player Search" ] ]
+            , li [] [ a [ href "#tSearch" ] [ text "Team Search" ] ]
             ]
         ]
