@@ -8,10 +8,10 @@ import Bootstrap.Form.Input as Input
 import Bootstrap.Button as Button
 
 
-view : Html Msg
-view =
+view : List ( String, List ( String, SearchType ) ) -> Html Msg
+view searches =
     div []
-        [ formView listOfQueryParams
+        [ formView searches
         , Button.linkButton [ Button.primary, Button.attrs [ href "#result" ] ] [ text "Search" ]
         ]
 
@@ -60,10 +60,3 @@ displayBasedOnType ( key, t ) =
 
         Number ->
             numberView key
-
-
-
--- resultTableRow : Result -> Html Msg
--- resultTableRow r =
---     let
---     in

@@ -4,7 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Navigation
-import Types exposing (Msg(..), Model, Player, Team, initModel)
+import Types exposing (Msg(..), Model, Player, Team, initModel, playerSearches, teamSearches)
 import Routes exposing (Route(..), parseLocation)
 import Bootstrap.CDN as CDN
 import Search
@@ -74,27 +74,17 @@ view model =
                 , div [] [ text "profile" ]
                 ]
 
-        PSearch ->
-            div [ class "my-container" ]
-                [ nav
-                , Search.view
-                ]
-
-        TSearch ->
-            div [ class "my-container" ]
-                [ nav
-                , Search.view
-                ]
-
         TeamResult ->
             div [ class "my-container" ]
                 [ nav
+                , Search.view teamSearches
                 , Team.teamTable model.teamResults
                 ]
 
         PlayerResult ->
             div [ class "my-container" ]
                 [ nav
+                , Search.view playerSearches
                 , Player.playerTable model.playerResults
                 ]
 
@@ -105,7 +95,7 @@ nav =
         [ CDN.stylesheet
         , ul []
             [ li [] [ a [ href "#profile" ] [ text "Profile" ] ]
-            , li [] [ a [ href "#pSearch" ] [ text "Player Search" ] ]
-            , li [] [ a [ href "#tSearch" ] [ text "Team Search" ] ]
+            , li [] [ a [ href "#players" ] [ text "Player Search" ] ]
+            , li [] [ a [ href "#teams" ] [ text "Team Search" ] ]
             ]
         ]

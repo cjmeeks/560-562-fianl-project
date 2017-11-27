@@ -57,6 +57,29 @@ type SearchType
     | Number
 
 
+playerSearches : List ( String, List ( String, SearchType ) )
+playerSearches =
+    [ ( "Player"
+      , [ ( "firstName", Like )
+        , ( "lastName", Like )
+        , ( "teamName", Like )
+        , ( "position", Like )
+        ]
+      )
+    ]
+
+
+teamSearches : List ( String, List ( String, SearchType ) )
+teamSearches =
+    [ ( "Team"
+      , [ ( "teamName", Like )
+        , ( "league", Like )
+        , ( "country", Like )
+        ]
+      )
+    ]
+
+
 listOfQueryParams : List ( String, List ( String, SearchType ) )
 listOfQueryParams =
     [ ( "Country"

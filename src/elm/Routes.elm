@@ -6,8 +6,6 @@ import UrlParser as Url exposing ((</>), (<?>), s, int, stringParam, top, oneOf,
 
 type Route
     = Profile
-    | PSearch
-    | TSearch
     | TeamResult
     | PlayerResult
 
@@ -17,8 +15,6 @@ matchers =
     oneOf
         [ map Profile top
         , map Profile (s "profile")
-        , map PSearch (s "pSearch")
-        , map TSearch (s "tSearch")
         , map TeamResult (s "teams")
         , map PlayerResult (s "players")
         ]
