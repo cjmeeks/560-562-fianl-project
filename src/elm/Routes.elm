@@ -7,6 +7,7 @@ import UrlParser as Url exposing ((</>), (<?>), s, int, stringParam, top, oneOf,
 type Route
     = Profile
     | Search
+    | Result
 
 
 matchers : Parser (Route -> a) a
@@ -15,6 +16,7 @@ matchers =
         [ map Profile top
         , map Profile (s "profile")
         , map Search (s "search")
+        , map Result (s "result")
         ]
 
 

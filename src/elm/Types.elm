@@ -193,6 +193,7 @@ type alias Model =
     , favoriteTeam : Maybe Team
     , favoritePlayer : Maybe Player
     , curPage : Route
+    , fetching : Data
     }
 
 
@@ -202,7 +203,14 @@ initModel =
     , favoriteTeam = Nothing
     , favoritePlayer = Nothing
     , curPage = Profile
+    , fetching = Noop
     }
+
+
+type Data
+    = Searching
+    | Noop
+    | Back
 
 
 type Msg
@@ -211,3 +219,4 @@ type Msg
     | ExactInput ( String, String )
     | MoreThanInput ( String, String )
     | LessThanInput ( String, String )
+    | SearchClick

@@ -5,12 +5,14 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Types exposing (Msg(..), Model, Player, Team, SearchType(..), initModel, listOfQueryParams)
 import Bootstrap.Form.Input as Input
+import Bootstrap.Button as Button
 
 
 view : Html Msg
 view =
     div []
         [ formView listOfQueryParams
+        , Button.linkButton [ Button.primary, Button.attrs [ href "#result" ] ] [ text "Search" ]
         ]
 
 
@@ -58,3 +60,10 @@ displayBasedOnType ( key, t ) =
 
         Number ->
             numberView key
+
+
+
+-- resultTableRow : Result -> Html Msg
+-- resultTableRow r =
+--     let
+--     in

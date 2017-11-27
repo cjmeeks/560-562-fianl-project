@@ -59,6 +59,9 @@ update msg model =
             in
                 ( model, Cmd.none )
 
+        SearchClick ->
+            ( model, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
@@ -73,6 +76,12 @@ view model =
             div [ class "my-container" ]
                 [ nav
                 , Search.view
+                ]
+
+        Result ->
+            div [ class "my-container" ]
+                [ nav
+                , text "result"
                 ]
 
 
