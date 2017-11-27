@@ -6,6 +6,16 @@ import Json.Decode.Pipeline exposing (decode, optional)
 import Routes exposing (Route(..))
 
 
+type alias PlayerNew =
+    { firstName : String
+    , lastName : String
+    , position : String
+    , number : Int
+    , salary : Int
+    , teamName : String
+    }
+
+
 type alias Result =
     { country_code : String
     , country_name : String
