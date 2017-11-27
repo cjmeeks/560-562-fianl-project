@@ -19,6 +19,7 @@ if (isDevelopment) {
   )
 }
 
+
 // Starting express
 if (!module.parent) {
   app.listen(port, err => {
