@@ -70,6 +70,12 @@ update msg model =
         AddTeam team ->
             ( { model | favoriteTeams = List.append model.favoriteTeams [ team ] }, Cmd.none )
 
+        DeletePlayer player ->
+            ( { model | favoritePlayers = List.filter (\x -> x.firstName /= player.firstName && x.lastName /= player.lastName) model.favoritePlayers }, Cmd.none )
+
+        DeleteTeam team ->
+            ( { model | favoriteTeams = List.append model.favoriteTeams [ team ] }, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
@@ -78,20 +84,22 @@ view model =
             div [ class "my-container" ]
                 [ nav
                 , div [] [ text "profile" ]
+                , Team.teamTable False model.favoriteTeams
+                , Player.playerTable False model.favoritePlayers
                 ]
 
         TeamResult ->
             div [ class "my-container" ]
                 [ nav
                 , Search.view teamSearches
-                , Team.teamTable model.teamResults
+                , Team.teamTable True model.teamResults
                 ]
 
         PlayerResult ->
             div [ class "my-container" ]
                 [ nav
                 , Search.view playerSearches
-                , Player.playerTable model.playerResults
+                , Player.playerTable True model.playerResults
                 ]
 
 

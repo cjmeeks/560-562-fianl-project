@@ -190,3 +190,5 @@ type Msg
     | SearchClick
     | AddPlayer Player
     | AddTeam Team
+    | DeleteTeam Team
+    | DeletePlayer Player

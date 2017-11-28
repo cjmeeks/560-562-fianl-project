@@ -8,13 +8,13 @@ import Bootstrap.Form.Input as Input
 import Bootstrap.Button as Button
 
 
-teamTable : List Team -> Html Msg
-teamTable teams =
-    table [] <| List.append [ teamHeaders ] <| List.map teamRow teams
+teamTable : Bool -> List Team -> Html Msg
+teamTable bool teams =
+    table [] <| List.append [ teamHeaders bool ] <| List.map (teamRow bool) teams
 
 
-teamHeaders : Html Msg
-teamHeaders =
+teamHeaders : Bool -> Html Msg
+teamHeaders bool =
     tr []
         [ th [] [ text "Name" ]
         , th [] [ text "League" ]
@@ -24,12 +24,15 @@ teamHeaders =
         , th [] [ text "Wins" ]
         , th [] [ text "Losses" ]
         , th [] [ text "Ties" ]
-        , th [] [ text "Add" ]
+        , if bool then
+            th [] [ text "Add" ]
+          else
+            th [] [ text "Delete" ]
         ]
 
 
-teamRow : Team -> Html Msg
-teamRow t =
+teamRow : Bool -> Team -> Html Msg
+teamRow bool t =
     tr []
         [ td [] [ text t.name ]
         , td [] [ text t.league ]
@@ -39,5 +42,8 @@ teamRow t =
         , td [] [ text <| toString t.wins ]
         , td [] [ text <| toString t.losses ]
         , td [] [ text <| toString t.ties ]
-        , td [] [ Button.button [ Button.success, Button.onClick (AddTeam t) ] [ text "Add" ] ]
+        , if bool then
+            td [] [ Button.button [ Button.success, Button.onClick (AddTeam t) ] [ text "Add" ] ]
+          else
+            td [] [ Button.button [ Button.danger, Button.onClick (DeleteTeam t) ] [ text "Delete" ] ]
         ]
