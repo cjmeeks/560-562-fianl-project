@@ -22,6 +22,7 @@ playerHeaders =
         , th [] [ text "Jersey Number" ]
         , th [] [ text "salary" ]
         , th [] [ text "Team Name" ]
+        , th [] [ text "Add" ]
         ]
 
 
@@ -34,4 +35,5 @@ playerRow p =
         , td [] [ text <| toString p.jerseyNumber ]
         , td [] [ text <| toString p.salary ]
         , td [] [ text p.teamName ]
+        , td [] [ Button.button [ Button.success, Button.onClick (AddPlayer p) ] [ text "Add" ] ]
         ]

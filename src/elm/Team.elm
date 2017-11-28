@@ -24,6 +24,7 @@ teamHeaders =
         , th [] [ text "Wins" ]
         , th [] [ text "Losses" ]
         , th [] [ text "Ties" ]
+        , th [] [ text "Add" ]
         ]
 
 
@@ -38,4 +39,5 @@ teamRow t =
         , td [] [ text <| toString t.wins ]
         , td [] [ text <| toString t.losses ]
         , td [] [ text <| toString t.ties ]
+        , td [] [ Button.button [ Button.success, Button.onClick (AddTeam t) ] [ text "Add" ] ]
         ]

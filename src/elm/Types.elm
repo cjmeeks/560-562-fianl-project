@@ -16,6 +16,16 @@ type alias Player =
     }
 
 
+initPlayer =
+    { firstName = " asdf"
+    , lastName = " asdf"
+    , position = " asdf"
+    , jerseyNumber = 0
+    , salary = 0
+    , teamName = " asdf"
+    }
+
+
 decodePlayer : Decoder Player
 decodePlayer =
     decode Player
@@ -36,6 +46,18 @@ type alias Team =
     , wins : Int
     , losses : Int
     , ties : Int
+    }
+
+
+initTeam =
+    { name = "team"
+    , league = "team"
+    , city = "team"
+    , yearFounded = 0
+    , coachName = "team"
+    , wins = 0
+    , losses = 0
+    , ties = 0
     }
 
 
@@ -145,9 +167,9 @@ type alias Model =
 initModel : Model
 initModel =
     { favoriteTeams = []
-    , teamResults = []
+    , teamResults = [ initTeam, initTeam ]
     , favoritePlayers = []
-    , playerResults = []
+    , playerResults = [ initPlayer, initPlayer ]
     , curPage = Profile
     , fetching = Noop
     }
@@ -166,3 +188,5 @@ type Msg
     | MoreThanInput ( String, String )
     | LessThanInput ( String, String )
     | SearchClick
+    | AddPlayer Player
+    | AddTeam Team

@@ -64,6 +64,12 @@ update msg model =
         SearchClick ->
             ( model, Cmd.none )
 
+        AddPlayer player ->
+            ( { model | favoritePlayers = List.append model.favoritePlayers [ player ] }, Cmd.none )
+
+        AddTeam team ->
+            ( { model | favoriteTeams = List.append model.favoriteTeams [ team ] }, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
