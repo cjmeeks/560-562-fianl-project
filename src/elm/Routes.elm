@@ -6,8 +6,8 @@ import UrlParser as Url exposing ((</>), (<?>), s, int, stringParam, top, oneOf,
 
 type Route
     = Profile
-    | Search
-    | Result
+    | TeamResult
+    | PlayerResult
 
 
 matchers : Parser (Route -> a) a
@@ -15,8 +15,8 @@ matchers =
     oneOf
         [ map Profile top
         , map Profile (s "profile")
-        , map Search (s "search")
-        , map Result (s "result")
+        , map TeamResult (s "teams")
+        , map PlayerResult (s "players")
         ]
 
 
@@ -27,4 +27,4 @@ parseLocation location =
             route
 
         Nothing ->
-            Search
+            Profile

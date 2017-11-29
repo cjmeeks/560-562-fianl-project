@@ -4,10 +4,12 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Navigation
-import Types exposing (Msg(..), Model, Player, Team, initModel)
+import Types exposing (Msg(..), Model, Player, Team, initModel, playerSearches, teamSearches)
 import Routes exposing (Route(..), parseLocation)
 import Bootstrap.CDN as CDN
 import Search
+import Player
+import Team
 
 
 main : Program Never Model Msg
@@ -62,6 +64,18 @@ update msg model =
         SearchClick ->
             ( model, Cmd.none )
 
+        AddPlayer player ->
+            ( { model | favoritePlayers = List.append model.favoritePlayers [ player ] }, Cmd.none )
+
+        AddTeam team ->
+            ( { model | favoriteTeams = List.append model.favoriteTeams [ team ] }, Cmd.none )
+
+        DeletePlayer player ->
+            ( { model | favoritePlayers = List.filter (\x -> x.firstName /= player.firstName && x.lastName /= player.lastName) model.favoritePlayers }, Cmd.none )
+
+        DeleteTeam team ->
+            ( { model | favoriteTeams = List.append model.favoriteTeams [ team ] }, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
@@ -70,18 +84,22 @@ view model =
             div [ class "my-container" ]
                 [ nav
                 , div [] [ text "profile" ]
+                , Team.teamTable False model.favoriteTeams
+                , Player.playerTable False model.favoritePlayers
                 ]
 
-        Search ->
+        TeamResult ->
             div [ class "my-container" ]
                 [ nav
-                , Search.view
+                , Search.view teamSearches
+                , Team.teamTable True model.teamResults
                 ]
 
-        Result ->
+        PlayerResult ->
             div [ class "my-container" ]
                 [ nav
-                , text "result"
+                , Search.view playerSearches
+                , Player.playerTable True model.playerResults
                 ]
 
 
@@ -91,6 +109,7 @@ nav =
         [ CDN.stylesheet
         , ul []
             [ li [] [ a [ href "#profile" ] [ text "Profile" ] ]
-            , li [] [ a [ href "#search" ] [ text "Search" ] ]
+            , li [] [ a [ href "#players" ] [ text "Player Search" ] ]
+            , li [] [ a [ href "#teams" ] [ text "Team Search" ] ]
             ]
         ]

@@ -6,102 +6,100 @@ import Json.Decode.Pipeline exposing (decode, optional)
 import Routes exposing (Route(..))
 
 
-type alias PlayerNew =
+type alias Player =
     { firstName : String
     , lastName : String
     , position : String
-    , number : Int
+    , jerseyNumber : Int
     , salary : Int
     , teamName : String
     }
 
 
-type alias Result =
-    { country_code : String
-    , country_name : String
-    , country_continent : String
-    , league_id : Int
-    , league_name : String
-    , league_yearFounded : Int
-    , stadium_id : Int
-    , stadium_name : String
-    , stadium_city : String
-    , stadium_yearOpened : Int
-    , stadium_capacity : Int
-    , stadium_locationCode : String
-    , people_id : Int
-    , people_first_name : String
-    , people_last_name : String
-    , people_nationality : String
-    , player_id : Int
-    , player_number : Int
-    , player_position : String
-    , team_id : Int
-    , team_name : String
-    , team_yearFounded : Int
-    , team_playsInLeague : Int
-    , team_homeStadium : Int
-    , contract_player : Int
-    , contract_salary : Int
-    , contract_years : Int
-    , contract_team : Int
-    , season_team : Int
-    , season_dateStarted : String
-    , season_dateEnded : String
-    , season_wins : Int
-    , season_losses : Int
-    , season_ties : Int
-    , coach_id : Int
-    , coach_yearHired : Int
-    , coach_team : Int
+initPlayer =
+    { firstName = " asdf"
+    , lastName = " asdf"
+    , position = " asdf"
+    , jerseyNumber = 0
+    , salary = 0
+    , teamName = " asdf"
     }
 
 
-decodeResult : Decoder Result
-decodeResult =
-    decode Result
-        |> optional "country_code" string "nothing"
-        |> optional "country_name" string "nothing"
-        |> optional "country_continent" string "nothing"
-        |> optional "league_id" int -1
-        |> optional "league_name" string "nothing"
-        |> optional "league_yearFounded" int -1
-        |> optional "stadium_id" int -1
-        |> optional "stadium_name" string "nothing"
-        |> optional "stadium_city" string "nothing"
-        |> optional "stadium_yearOpened" int -1
-        |> optional "stadium_capacity" int -1
-        |> optional "stadium_locationCode" string "nothing"
-        |> optional "people_id" int -1
-        |> optional "people_first_name" string "nothing"
-        |> optional "people_last_name" string "nothing"
-        |> optional "people_nationality" string "nothing"
-        |> optional "player_id" int -1
-        |> optional "player_number" int -1
-        |> optional "player_position" string "nothing"
-        |> optional "team_id" int -1
-        |> optional "team_name" string "nothing"
-        |> optional "team_yearFounded" int -1
-        |> optional "team_playsInLeague" int -1
-        |> optional "team_homeStadium" int -1
-        |> optional "contract_player" int -1
-        |> optional "contract_salary" int -1
-        |> optional "contract_years" int -1
-        |> optional "contract_team" int -1
-        |> optional "season_team" int -1
-        |> optional "season_dateStarted" string "nothing"
-        |> optional "season_dateEnded" string "nothing"
-        |> optional "season_wins" int -1
-        |> optional "season_losses" int -1
-        |> optional "season_ties" int -1
-        |> optional "coach_id" int -1
-        |> optional "coach_yearHired" int -1
-        |> optional "coach_team" int -1
+decodePlayer : Decoder Player
+decodePlayer =
+    decode Player
+        |> optional "firstName" string "nothing"
+        |> optional "lastName" string "nothing"
+        |> optional "position" string "nothing"
+        |> optional "jerseyNumber" int -1
+        |> optional "salary" int -1
+        |> optional "teamName" string "nothing"
+
+
+type alias Team =
+    { name : String
+    , league : String
+    , city : String
+    , yearFounded : Int
+    , coachName : String
+    , wins : Int
+    , losses : Int
+    , ties : Int
+    }
+
+
+initTeam =
+    { name = "team"
+    , league = "team"
+    , city = "team"
+    , yearFounded = 0
+    , coachName = "team"
+    , wins = 0
+    , losses = 0
+    , ties = 0
+    }
+
+
+decodeTeam : Decoder Team
+decodeTeam =
+    decode Team
+        |> optional "name" string "nothing"
+        |> optional "league" string "nothing"
+        |> optional "city" string "nothing"
+        |> optional "yearFounded" int -1
+        |> optional "coachName" string "nothing"
+        |> optional "wins" int -1
+        |> optional "losses" int -1
+        |> optional "ties" int -1
 
 
 type SearchType
     = Like
     | Number
+
+
+playerSearches : List ( String, List ( String, SearchType ) )
+playerSearches =
+    [ ( "Player"
+      , [ ( "firstName", Like )
+        , ( "lastName", Like )
+        , ( "teamName", Like )
+        , ( "position", Like )
+        ]
+      )
+    ]
+
+
+teamSearches : List ( String, List ( String, SearchType ) )
+teamSearches =
+    [ ( "Team"
+      , [ ( "teamName", Like )
+        , ( "league", Like )
+        , ( "country", Like )
+        ]
+      )
+    ]
 
 
 listOfQueryParams : List ( String, List ( String, SearchType ) )
@@ -156,52 +154,11 @@ listOfQueryParams =
     ]
 
 
-type alias Player =
-    { people_id : Int
-    , people_first_name : String
-    , people_last_name : String
-    , people_nationality : String
-    , player_id : Int
-    , player_number : Int
-    , player_position : String
-    }
-
-
-decodePlayer : Decoder Player
-decodePlayer =
-    decode Player
-        |> optional "people_id" int -1
-        |> optional "people_first_name" string "nothing"
-        |> optional "people_last_name" string "nothing"
-        |> optional "people_nationality" string "nothing"
-        |> optional "player_id" int -1
-        |> optional "player_number" int -1
-        |> optional "player_position" string "nothing"
-
-
-type alias Team =
-    { team_id : Int
-    , team_name : String
-    , team_yearFounded : Int
-    , team_playsInLeague : Int
-    , team_homeStadium : Int
-    }
-
-
-decodeTeam : Decoder Team
-decodeTeam =
-    decode Team
-        |> optional "team_id" int -1
-        |> optional "team_name" string "nothing"
-        |> optional "team_yearFounded" int -1
-        |> optional "team_playsInLeague" int -1
-        |> optional "team_homeStadium" int -1
-
-
 type alias Model =
-    { results : List Result
-    , favoriteTeam : Maybe Team
-    , favoritePlayer : Maybe Player
+    { favoriteTeams : List Team
+    , teamResults : List Team
+    , favoritePlayers : List Player
+    , playerResults : List Player
     , curPage : Route
     , fetching : Data
     }
@@ -209,9 +166,10 @@ type alias Model =
 
 initModel : Model
 initModel =
-    { results = []
-    , favoriteTeam = Nothing
-    , favoritePlayer = Nothing
+    { favoriteTeams = []
+    , teamResults = [ initTeam, initTeam ]
+    , favoritePlayers = []
+    , playerResults = [ initPlayer, initPlayer ]
     , curPage = Profile
     , fetching = Noop
     }
@@ -230,3 +188,7 @@ type Msg
     | MoreThanInput ( String, String )
     | LessThanInput ( String, String )
     | SearchClick
+    | AddPlayer Player
+    | AddTeam Team
+    | DeleteTeam Team
+    | DeletePlayer Player
