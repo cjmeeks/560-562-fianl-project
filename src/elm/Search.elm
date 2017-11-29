@@ -12,7 +12,7 @@ view : List ( String, List ( String, SearchType ) ) -> Html Msg
 view searches =
     div []
         [ formView searches
-        , Button.linkButton [ Button.primary, Button.attrs [ href "#result" ] ] [ text "Search" ]
+        , Button.linkButton [ Button.primary ] [ text "Search" ]
         ]
 
 

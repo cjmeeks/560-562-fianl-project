@@ -4,6 +4,14 @@ const webpackMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 const path = require('path')
 
+var mysql      = require('mysql');
+var connection = mysql.createConnection({
+  host     : '165.227.120.198',
+  user     : '562_demo',
+  password : '562_password',
+  database : 'soccer_562'
+});
+
 module.exports = app => {
   const compiler = webpack(config)
   const middleware = webpackMiddleware(compiler, {
@@ -25,7 +33,20 @@ module.exports = app => {
     res.end()
   })
   app.get('/hello', (req,res) =>{
-    res.send('helloWorld')
+    res.send('helloWorld ' + req.query.name)
+    
+  })
+  app.get('/getPlayers/:fName', (req,res) =>{
+    res.send(req.params)
+  })
+  app.get('/getPlayers/:fName/:lName', (req,res) =>{
+    res.send(req.params)
+  })
+  app.get('/getPlayers/:fName/:lName/:teamName', (req,res) =>{
+    res.send(req.params)
+  })
+  app.get('/getPlayers/:fName/:lName/:teamName/:position', (req,res) =>{
+    res.send(req.params)
   })
 }
 
