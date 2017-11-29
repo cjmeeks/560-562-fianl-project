@@ -4,17 +4,15 @@ var connection = mysql.createConnection({
     user: '562_demo',
     password: '562_password',
     database: 'soccer_562',
-    port: 3306
+    port: '3306'
 });
 connection.connect();
-/*connection.query("SELECT * FROM people", function(err, results, fields) {
-    if(err) {
-        console.log("Error while performing query: " + err);
+connection.query('SELECT * FROM people', function (error, results, fields) {
+    if (error)
+        throw error;
+    for (var _i = 0, results_1 = results; _i < results_1.length; _i++) {
+        var result = results_1[_i];
+        console.log(result);
     }
-    else {
-        for (let result in results) {
-            console.log(result);
-        }
-    }
-})*/
+});
 connection.end();
