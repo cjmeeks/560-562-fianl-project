@@ -1,9 +1,10 @@
 module Types exposing (..)
 
 import Navigation
-import Json.Decode exposing (Decoder, string, int)
+import Json.Decode exposing (Decoder, string, int, float)
 import Json.Decode.Pipeline exposing (decode, optional)
 import Routes exposing (Route(..))
+import Http
 
 
 type alias Player =
@@ -11,7 +12,7 @@ type alias Player =
     , lastName : String
     , position : String
     , jerseyNumber : Int
-    , salary : Int
+    , salary : Float
     , teamName : String
     }
 
@@ -32,9 +33,9 @@ decodePlayer =
         |> optional "firstName" string "nothing"
         |> optional "lastName" string "nothing"
         |> optional "position" string "nothing"
-        |> optional "jerseyNumber" int -1
-        |> optional "salary" int -1
-        |> optional "teamName" string "nothing"
+        |> optional "number" int -1
+        |> optional "salary" float -1
+        |> optional "name" string "nothing"
 
 
 type alias Team =
@@ -167,9 +168,9 @@ type alias Model =
 initModel : Model
 initModel =
     { favoriteTeams = []
-    , teamResults = [ initTeam, initTeam ]
+    , teamResults = []
     , favoritePlayers = []
-    , playerResults = [ initPlayer, initPlayer ]
+    , playerResults = []
     , curPage = Profile
     , fetching = Noop
     }
@@ -192,3 +193,6 @@ type Msg
     | AddTeam Team
     | DeleteTeam Team
     | DeletePlayer Player
+    | HandleTeams (List Team)
+    | HandlePlayers (List Player)
+    | HandleError Http.Error

@@ -10,6 +10,7 @@ import Bootstrap.CDN as CDN
 import Search
 import Player
 import Team
+import Dict
 
 
 main : Program Never Model Msg
@@ -24,7 +25,7 @@ main =
 
 init : Navigation.Location -> ( Model, Cmd Msg )
 init loc =
-    ( { initModel | curPage = parseLocation loc }, Cmd.none )
+    ( { initModel | curPage = parseLocation loc }, Cmd.batch [ Team.fetchTeams "all" Dict.empty, Player.fetchPlayers "all" Dict.empty ] )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -75,6 +76,19 @@ update msg model =
 
         DeleteTeam team ->
             ( { model | favoriteTeams = List.append model.favoriteTeams [ team ] }, Cmd.none )
+
+        HandleTeams teams ->
+            ( { model | teamResults = teams }, Cmd.none )
+
+        HandlePlayers players ->
+            ( { model | playerResults = players }, Cmd.none )
+
+        HandleError err ->
+            let
+                temp =
+                    Debug.log "error: " err
+            in
+                ( model, Cmd.none )
 
 
 view : Model -> Html Msg

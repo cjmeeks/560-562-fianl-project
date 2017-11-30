@@ -3,9 +3,12 @@ module Team exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Types exposing (Msg(..), Model, Player, Team, SearchType(..), initModel, listOfQueryParams)
+import Types exposing (Msg(..), Model, Player, Team, SearchType(..), decodeTeam, initModel, listOfQueryParams)
+import Json.Decode as Decode
 import Bootstrap.Form.Input as Input
 import Bootstrap.Button as Button
+import Http
+import Dict
 
 
 teamTable : Bool -> List Team -> Html Msg
@@ -47,3 +50,23 @@ teamRow bool t =
           else
             td [] [ Button.button [ Button.danger, Button.onClick (DeleteTeam t) ] [ text "Delete" ] ]
         ]
+
+
+processTeam : Result Http.Error (List Team) -> Msg
+processTeam result =
+    case result of
+        Ok teams ->
+            HandleTeams teams
+
+        Err err ->
+            HandleError err
+
+
+fetchTeams : String -> Dict.Dict String String -> Cmd Msg
+fetchTeams searchType dict =
+    case searchType of
+        "all" ->
+            Http.send processTeam <| Http.get "http://localhost:3000/getAllTeams" (Decode.list decodeTeam)
+
+        _ ->
+            Http.send processTeam <| Http.get "http://localhost:3000/getAllTeams" (Decode.list decodeTeam)
