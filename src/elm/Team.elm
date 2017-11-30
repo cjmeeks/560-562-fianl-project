@@ -3,7 +3,7 @@ module Team exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Types exposing (Msg(..), Model, Player, Team, SearchType(..), decodeTeam, initModel)
+import Types exposing (Msg(..), Model, Player, Team, SearchType(..), User, decodeTeam, initModel)
 import Json.Decode as Decode
 import Bootstrap.Form.Input as Input
 import Bootstrap.Button as Button
@@ -50,6 +50,29 @@ teamRow bool t =
           else
             td [] [ Button.button [ Button.danger, Button.onClick (DeleteTeam t) ] [ text "Delete" ] ]
         ]
+
+
+addFavTeam : String -> Int -> User -> Cmd Msg
+addFavTeam typeof id user =
+    case typeof of
+        "add" ->
+            Http.send processFavTeam <| Http.get ("http://localhost:3000/favTeam/add/" ++ (toString id) ++ "/" ++ user.username) Decode.bool
+
+        "delete" ->
+            Http.send processFavTeam <| Http.get ("http://localhost:3000/favTeam/delete/" ++ (toString id) ++ "/" ++ user.username) Decode.bool
+
+        _ ->
+            Http.send processFavTeam <| Http.get ("http://localhost:3000/favTeam/add/" ++ (toString id) ++ "/" ++ user.username) Decode.bool
+
+
+processFavTeam : Result Http.Error Bool -> Msg
+processFavTeam result =
+    case result of
+        Ok players ->
+            HandleFav players
+
+        Err err ->
+            HandleError err
 
 
 processTeam : Result Http.Error (List Team) -> Msg

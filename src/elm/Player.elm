@@ -1,4 +1,4 @@
-module Player exposing (playerTable, fetchPlayers)
+module Player exposing (playerTable, fetchPlayers, addFavPlayer)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)

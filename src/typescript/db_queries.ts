@@ -119,7 +119,7 @@ const CHECK_IF_USERNAME_EXISTS_QUERY: string = "SELECT users.username\n"
 
 const CHECK_LOGIN_QUERY: string = "SELECT *\n"
                                 + "FROM users\n"
-                                + "WHERE users.username = \"?\" AND users.password = \"?\";";
+                                + "WHERE users.username = \'?\' AND users.password = \'?\';";
 
 const INSERT_NEW_USER_QUERY: string = "INSERT INTO users(username, password)\n"
                                     + "VALUES(?, ?);";

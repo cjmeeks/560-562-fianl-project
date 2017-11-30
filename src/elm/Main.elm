@@ -124,16 +124,16 @@ update msg model =
             ( model, Cmd.none )
 
         AddPlayer player ->
-            ( { model | favoritePlayers = List.append model.favoritePlayers [ player ] }, Cmd.none )
+            ( { model | favoritePlayers = List.append model.favoritePlayers [ player ] }, Player.addFavPlayer "add" player.id model.user )
 
         AddTeam team ->
-            ( { model | favoriteTeams = List.append model.favoriteTeams [ team ] }, Cmd.none )
+            ( { model | favoriteTeams = List.append model.favoriteTeams [ team ] }, Team.addFavTeam "add" team.id model.user )
 
         DeletePlayer player ->
-            ( { model | favoritePlayers = List.filter (\x -> x.firstName /= player.firstName && x.lastName /= player.lastName) model.favoritePlayers }, Cmd.none )
+            ( { model | favoritePlayers = List.filter (\x -> x.firstName /= player.firstName && x.lastName /= player.lastName) model.favoritePlayers }, Player.addFavPlayer "delete" player.id model.user )
 
         DeleteTeam team ->
-            ( { model | favoriteTeams = List.filter (\x -> x.name /= team.name) model.favoriteTeams }, Cmd.none )
+            ( { model | favoriteTeams = List.filter (\x -> x.name /= team.name) model.favoriteTeams }, Team.addFavTeam "delete" team.id model.user )
 
         HandleTeams teams ->
             ( { model | teamResults = teams }, Cmd.none )
