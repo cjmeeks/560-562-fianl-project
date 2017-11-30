@@ -182,12 +182,14 @@ update msg model =
 
         LoginButton ->
             ( model, Login.loginCall model.user )
-        
-        HandleFav bool
+
+        HandleFav bool ->
             let
-                temp = Debug.log "Fav back:" bool
+                temp =
+                    Debug.log "Fav back:" bool
             in
-                (model,Cmd.none)
+                ( model, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
