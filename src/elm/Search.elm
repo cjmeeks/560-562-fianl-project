@@ -3,7 +3,7 @@ module Search exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Types exposing (Msg(..), Model, Player, Team, SearchType(..), initModel, listOfQueryParams)
+import Types exposing (Msg(..), Model, Player, Team, SearchType(..), initModel)
 import Bootstrap.Form.Input as Input
 import Bootstrap.Button as Button
 

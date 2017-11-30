@@ -11,6 +11,7 @@ import Search
 import Player
 import Team
 import Dict
+import Array
 
 
 main : Program Never Model Msg
@@ -36,31 +37,87 @@ update msg model =
 
         LikeInput ( key, value ) ->
             let
-                temp =
-                    Debug.log "likeinput" ( key, value )
+                split =
+                    String.split "." key
+
+                typeOf =
+                    Maybe.withDefault "error" <| Array.get 0 <| Array.fromList split
+
+                newKey =
+                    Maybe.withDefault "error" <| Array.get 1 <| Array.fromList split
             in
-                ( model, Cmd.none )
+                case typeOf of
+                    "team" ->
+                        ( { model | teamQuery = Dict.insert newKey value model.teamQuery }, Cmd.none )
+
+                    "player" ->
+                        ( { model | playerQuery = Dict.insert newKey value model.playerQuery }, Cmd.none )
+
+                    _ ->
+                        ( model, Cmd.none )
 
         ExactInput ( key, value ) ->
             let
-                temp =
-                    Debug.log "exact" ( key, value )
+                split =
+                    String.split "." key
+
+                typeOf =
+                    Maybe.withDefault "error" <| Array.get 0 <| Array.fromList split
+
+                newKey =
+                    Maybe.withDefault "error" <| Array.get 1 <| Array.fromList split
             in
-                ( model, Cmd.none )
+                case typeOf of
+                    "team" ->
+                        ( { model | teamQuery = Dict.insert newKey value model.teamQuery }, Cmd.none )
+
+                    "player" ->
+                        ( { model | playerQuery = Dict.insert newKey value model.playerQuery }, Cmd.none )
+
+                    _ ->
+                        ( model, Cmd.none )
 
         MoreThanInput ( key, value ) ->
             let
-                temp =
-                    Debug.log "moreThan" ( key, value )
+                split =
+                    String.split "." key
+
+                typeOf =
+                    Maybe.withDefault "error" <| Array.get 0 <| Array.fromList split
+
+                newKey =
+                    Maybe.withDefault "error" <| Array.get 1 <| Array.fromList split
             in
-                ( model, Cmd.none )
+                case typeOf of
+                    "team" ->
+                        ( { model | teamQuery = Dict.insert newKey value model.teamQuery }, Cmd.none )
+
+                    "player" ->
+                        ( { model | playerQuery = Dict.insert newKey value model.playerQuery }, Cmd.none )
+
+                    _ ->
+                        ( model, Cmd.none )
 
         LessThanInput ( key, value ) ->
             let
-                temp =
-                    Debug.log "lessthan" ( key, value )
+                split =
+                    String.split "." key
+
+                typeOf =
+                    Maybe.withDefault "error" <| Array.get 0 <| Array.fromList split
+
+                newKey =
+                    Maybe.withDefault "error" <| Array.get 1 <| Array.fromList split
             in
-                ( model, Cmd.none )
+                case typeOf of
+                    "team" ->
+                        ( { model | teamQuery = Dict.insert newKey value model.teamQuery }, Cmd.none )
+
+                    "player" ->
+                        ( { model | playerQuery = Dict.insert newKey value model.playerQuery }, Cmd.none )
+
+                    _ ->
+                        ( model, Cmd.none )
 
         SearchClick ->
             ( model, Cmd.none )

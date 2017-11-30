@@ -3,7 +3,7 @@ module Team exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Types exposing (Msg(..), Model, Player, Team, SearchType(..), decodeTeam, initModel, listOfQueryParams)
+import Types exposing (Msg(..), Model, Player, Team, SearchType(..), decodeTeam, initModel)
 import Json.Decode as Decode
 import Bootstrap.Form.Input as Input
 import Bootstrap.Button as Button
