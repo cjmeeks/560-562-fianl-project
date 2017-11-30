@@ -71,7 +71,9 @@ module.exports = app => {
 
   app.get('/login', (req, res) => {
     userLoginSignup.filler();
-    userLoginSignup.checkLogin("bob", "password");
+    userLoginSignup.checkLogin("bob", "password", function(data) {
+      res.send(data);
+    })
   })
 
   //Test Endpoints
