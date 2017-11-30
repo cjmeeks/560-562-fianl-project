@@ -65,10 +65,13 @@ module.exports = app => {
   //Login Endpoints
   app.get('/signup', (req, res) => {
     userLoginSignup.filler();
+    //The value passed will have to be changed.
+    userLoginSignup.checkUsername("bob", "password");
   })
 
   app.get('/login', (req, res) => {
     userLoginSignup.filler();
+    userLoginSignup.checkLogin("bob", "password");
   })
 
   //Test Endpoints

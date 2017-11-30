@@ -286,3 +286,27 @@ export function check_login_query(params, callback) {
     //Expecting params to be a list with two params, username and password
     var inserts = [params[0], params[1]];
 }
+
+export function insert_favorite_player_query(params, callback) {
+    //TODO: finish this function.
+}
+
+export function insert_favorite_team_query(params, callback) {
+    //TODO: finish this function.
+}
+
+export function delete_favorite_team_query(params, callback) {
+    //TODO: finish this function.
+}
+
+export function delete_favoite_player_query(params, callback) {
+    //TODO: finish this function.
+}
+
+export function update_favorite_player_query(params, callback) {
+    //TODO: finish this function.
+}
+
+export function update_favorite_team_query(params, callback) {
+    //TODO: finish this function.
+}
