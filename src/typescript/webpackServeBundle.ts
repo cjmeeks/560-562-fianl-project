@@ -4,6 +4,7 @@ const webpackMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 
 import * as db_conn from "./db_queries"
+import * as userLoginSignup from "./userLogin_Signup"
 
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
@@ -33,16 +34,10 @@ module.exports = app => {
     res.write(middleware.fileSystem.readFileSync(path.join(__dirname, '/../dist/index.html')))
     res.end()
   })
-  app.get('/hello', (req,res) =>{
-    res.send('helloWorld ' + req.query.name)
-  })
+
+  //Player Endpoints
   app.get('/getAllPlayers', (req,res) =>{
     var players = db_conn.players_query(function(data){
-      res.send(data)
-    })
-  })
-  app.get('/getAllTeams', (req,res) =>{
-    var teams = db_conn.teams_query(function(data){
       res.send(data)
     })
   })
@@ -57,6 +52,35 @@ module.exports = app => {
   })
   app.get('/getPlayers/:fName/:lName/:teamName/:position', (req,res) =>{
     res.send(req.params)
+  })
+
+  //Team Endpoints
+  app.get('/getAllTeams', (req,res) =>{
+    var teams = db_conn.teams_query(function(data){
+      res.send(data)
+    })
+  })
+
+
+  //Login Endpoints
+  app.get('/signup', (req, res) => {
+    userLoginSignup.filler();
+  })
+
+  app.get('/login', (req, res) => {
+    userLoginSignup.filler();
+  })
+
+  //Test Endpoints
+  app.get('/testEndpoint', (req, res) => {
+    var inserts = ["erso", "erso", "Sporting"];
+    var players = db_conn.players_team_and_name_search_query(inserts, function(data) {
+      res.send(data);
+    })
+  })
+
+  app.get('/hello', (req,res) =>{
+    res.send('helloWorld ' + req.query.name)
   })
 }
 
