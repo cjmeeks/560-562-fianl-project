@@ -5,6 +5,7 @@ import Json.Decode exposing (Decoder, string, int, float)
 import Json.Decode.Pipeline exposing (decode, optional)
 import Routes exposing (Route(..))
 import Http
+import Dict
 
 
 type alias Player =
@@ -83,10 +84,10 @@ type SearchType
 playerSearches : List ( String, List ( String, SearchType ) )
 playerSearches =
     [ ( "Player"
-      , [ ( "firstName", Like )
-        , ( "lastName", Like )
-        , ( "teamName", Like )
-        , ( "position", Like )
+      , [ ( "player.firstName", Like )
+        , ( "player.lastName", Like )
+        , ( "player.teamName", Like )
+        , ( "player.position", Like )
         ]
       )
     ]
@@ -95,61 +96,9 @@ playerSearches =
 teamSearches : List ( String, List ( String, SearchType ) )
 teamSearches =
     [ ( "Team"
-      , [ ( "teamName", Like )
-        , ( "league", Like )
-        , ( "country", Like )
-        ]
-      )
-    ]
-
-
-listOfQueryParams : List ( String, List ( String, SearchType ) )
-listOfQueryParams =
-    [ ( "Country"
-      , [ ( "country_name", Like )
-        , ( "country_continent", Like )
-        ]
-      )
-    , ( "League"
-      , [ ( "league_name", Like )
-        ]
-      )
-    , ( "People"
-      , [ ( "people_first_name", Like )
-        , ( "people_last_name", Like )
-        , ( "people_nationality", Like )
-        ]
-      )
-    , ( "Player"
-      , [ ( "player_number", Number )
-        , ( "player_position", Like )
-        ]
-      )
-    , ( "Stadium"
-      , [ ( "stadium_name", Like )
-        , ( "stadium_city", Like )
-        , ( "stadium_capacity", Number )
-        , ( "stadium_yearFounded", Number )
-        ]
-      )
-    , ( "Team"
-      , [ ( "team_name", Like )
-        , ( "team_yearFounded", Like )
-        ]
-      )
-    , ( "Contracts"
-      , [ ( "contract_salary", Number )
-        , ( "contract_years", Number )
-        ]
-      )
-    , ( "Season"
-      , [ ( "season_wins", Number )
-        , ( "season_losses", Number )
-        , ( "season_ties", Number )
-        ]
-      )
-    , ( "Coach"
-      , [ ( "coach_yearHired", Number )
+      , [ ( "team.teamName", Like )
+        , ( "team.league", Like )
+        , ( "team.country", Like )
         ]
       )
     ]
@@ -162,6 +111,8 @@ type alias Model =
     , playerResults : List Player
     , curPage : Route
     , fetching : Data
+    , playerQuery : Dict.Dict String String
+    , teamQuery : Dict.Dict String String
     }
 
 
@@ -173,6 +124,8 @@ initModel =
     , playerResults = []
     , curPage = Profile
     , fetching = Noop
+    , playerQuery = Dict.empty
+    , teamQuery = Dict.empty
     }
 
 
