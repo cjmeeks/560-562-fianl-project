@@ -140,26 +140,26 @@ module.exports = app => {
 
   //favorite
 
-  app.post('/favPlayer/add/:id/:user', (req,res) =>{
+  app.get('/favPlayer/add/:id/:user', (req,res) =>{
     var newInserts = [ req.params.id, req.params.user ]
     var players = db_conn.update_favorite_player_query(newInserts, function(data) {
       res.send(true);
     })
   })
-  app.post('/favPlayer/delete/:id/:user', (req,res) =>{
+  app.get('/favPlayer/delete/:id/:user', (req,res) =>{
     var newInserts = [ req.params.id, req.params.user ]
     var players = db_conn.delete_favorite_player_query(newInserts, function(data) {
       res.send(true);
     })
   })
 
-  app.post('/favTeam/add/:id/:user', (req,res) =>{
+  app.get('/favTeam/add/:id/:user', (req,res) =>{
     var newInserts = [ req.params.id, req.params.user ]
     var players = db_conn.update_favoite_team_query(newInserts, function(data) {
       res.send(true);
     })
   })
-  app.post('/favTeam/delete/:id/:user', (req,res) =>{
+  app.get('/favTeam/delete/:id/:user', (req,res) =>{
     var newInserts = [ req.params.id, req.params.user ]
     var players = db_conn.delete_favorite_team_query(newInserts, function(data) {
       res.send(true);
