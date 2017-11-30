@@ -58,11 +58,84 @@ processPlayer result =
             HandleError err
 
 
-fetchPlayers : String -> Dict.Dict String String -> Cmd Msg
-fetchPlayers searchType dict =
-    case searchType of
-        "all" ->
-            Http.send processPlayer <| Http.get "http://localhost:3000/getAllPlayers" (Decode.list decodePlayer)
+fetchPlayers : Dict.Dict String String -> Cmd Msg
+fetchPlayers dict =
+    let
+        ( query, searchType ) =
+            getPQuery dict
 
-        _ ->
-            Http.send processPlayer <| Http.get "http://localhost:3000/getAllPlayers" (Decode.list decodePlayer)
+        temp =
+            Debug.log "typeQ:" searchType
+    in
+        case searchType of
+            "all" ->
+                Http.send processPlayer <| Http.get "http://localhost:3000/getAllPlayers" (Decode.list decodePlayer)
+
+            "firstName" ->
+                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/" ++ query.fN ++ "/" ++ query.lN) (Decode.list decodePlayer)
+
+            "lastName" ->
+                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/" ++ query.fN ++ "/" ++ query.lN) (Decode.list decodePlayer)
+
+            "firstName lastName" ->
+                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/" ++ query.fN ++ "/" ++ query.lN) (Decode.list decodePlayer)
+
+            "firstName lastName teamName" ->
+                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/" ++ query.fN ++ "/" ++ query.lN ++ "/" ++ query.tN) (Decode.list decodePlayer)
+
+            "firstName lastName teamName position" ->
+                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/" ++ query.fN ++ "/" ++ query.lN ++ "/" ++ query.tN ++ "/" ++ query.p) (Decode.list decodePlayer)
+
+            "position" ->
+                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/" ++ query.p) (Decode.list decodePlayer)
+
+            "teamName position" ->
+                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/tp/" ++ query.tN ++ "/" ++ query.p) (Decode.list decodePlayer)
+
+            "firstName lastName position" ->
+                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/flp/" ++ query.fN ++ "/" ++ query.lN ++ "/" ++ query.p) (Decode.list decodePlayer)
+
+            _ ->
+                Http.send processPlayer <| Http.get "http://localhost:3000/getAllPlayers" (Decode.list decodePlayer)
+
+
+type alias BasicPQ =
+    { fN : String
+    , lN : String
+    , tN : String
+    , p : String
+    }
+
+
+getPQuery : Dict.Dict String String -> ( BasicPQ, String )
+getPQuery dict =
+    let
+        f =
+            Maybe.withDefault "nothing" <| Dict.get "firstName" dict
+
+        l =
+            Maybe.withDefault "nothing" <| Dict.get "lastName" dict
+
+        t =
+            Maybe.withDefault "nothing" <| Dict.get "teamName" dict
+
+        p =
+            Maybe.withDefault "nothing" <| Dict.get "position" dict
+
+        list =
+            [ ( "firstName", f )
+            , ( "lastName", l )
+            , ( "teamName", t )
+            , ( "position", p )
+            ]
+
+        temp =
+            Debug.log "list" list
+
+        typeOf =
+            if List.length (Dict.toList dict) < 1 then
+                "all"
+            else
+                String.concat <| List.intersperse " " <| List.map Tuple.first <| List.filter (\( x, y ) -> y /= "nothing") list
+    in
+        ( BasicPQ f l t p, typeOf )

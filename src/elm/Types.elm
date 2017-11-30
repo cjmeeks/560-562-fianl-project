@@ -98,7 +98,6 @@ teamSearches =
     [ ( "Team"
       , [ ( "team.teamName", Like )
         , ( "team.league", Like )
-        , ( "team.country", Like )
         ]
       )
     ]
@@ -149,3 +148,4 @@ type Msg
     | HandleTeams (List Team)
     | HandlePlayers (List Player)
     | HandleError Http.Error
+    | Search String

@@ -8,11 +8,11 @@ import Bootstrap.Form.Input as Input
 import Bootstrap.Button as Button
 
 
-view : List ( String, List ( String, SearchType ) ) -> Html Msg
-view searches =
+view : String -> List ( String, List ( String, SearchType ) ) -> Html Msg
+view which searches =
     div []
         [ formView searches
-        , Button.linkButton [ Button.primary ] [ text "Search" ]
+        , Button.linkButton [ Button.onClick (Search which), Button.primary ] [ text "Search" ]
         ]
 
 

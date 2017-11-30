@@ -41,12 +41,7 @@ module.exports = app => {
       res.send(data)
     })
   })
-  app.get('/getPlayers/:fName', (req,res) =>{
-    res.send(req.params)
-  })
-  app.get('/getPlayers/:lName', (req,res) =>{
-    res.send(req.params)
-  })
+  //this route needs to check if fname or lname = "nothing" then do query off of that
   app.get('/getPlayers/:fName/:lName', (req,res) =>{
     var newInserts = [req.params.fName, req.params.lName ]
     var players = db_conn.players_name_search_query(newInserts, function(data) {
@@ -65,10 +60,10 @@ module.exports = app => {
   app.get('/getPlayers/:position', (req,res) =>{
     res.send(req.params)
   })
-  app.get('/getPlayers/:teamName/:position', (req,res) =>{
+  app.get('/getPlayers/tp/:teamName/:position', (req,res) =>{
     res.send(req.params)
   })
-  app.get('/getPlayers/:fName/:lName/:position', (req,res) =>{
+  app.get('/getPlayers/flp/:fName/:lName/:position', (req,res) =>{
     res.send(req.params)
   })
 
@@ -86,10 +81,8 @@ module.exports = app => {
   app.get('/getTeams/:tName/:league', (req,res) =>{
     res.send(req.params)
   })
-  app.get('/getTeams/:league', (req,res) =>{
-    res.send(req.params)
-  })
-  app.get('/getTeams/:tName', (req,res) =>{
+  //need to have diff route when same number of params given
+  app.get('/getTeams/league/:league', (req,res) =>{
     res.send(req.params)
   })
 

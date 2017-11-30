@@ -62,11 +62,56 @@ processTeam result =
             HandleError err
 
 
-fetchTeams : String -> Dict.Dict String String -> Cmd Msg
-fetchTeams searchType dict =
-    case searchType of
-        "all" ->
-            Http.send processTeam <| Http.get "http://localhost:3000/getAllTeams" (Decode.list decodeTeam)
+fetchTeams : Dict.Dict String String -> Cmd Msg
+fetchTeams dict =
+    let
+        ( query, searchType ) =
+            getTQuery dict
+    in
+        case searchType of
+            "all" ->
+                Http.send processTeam <| Http.get "http://localhost:3000/getAllTeams" (Decode.list decodeTeam)
 
-        _ ->
-            Http.send processTeam <| Http.get "http://localhost:3000/getAllTeams" (Decode.list decodeTeam)
+            "teamName" ->
+                Http.send processTeam <| Http.get ("http://localhost:3000/getTeams/" ++ query.name) (Decode.list decodeTeam)
+
+            "teamName league" ->
+                Http.send processTeam <| Http.get ("http://localhost:3000/getTeams/" ++ query.name ++ "/" ++ query.league) (Decode.list decodeTeam)
+
+            "league" ->
+                Http.send processTeam <| Http.get ("http://localhost:3000/getTeams/league/" ++ query.league) (Decode.list decodeTeam)
+
+            _ ->
+                Http.send processTeam <| Http.get "http://localhost:3000/getAllTeams" (Decode.list decodeTeam)
+
+
+type alias BasicTQ =
+    { name : String
+    , league : String
+    }
+
+
+getTQuery : Dict.Dict String String -> ( BasicTQ, String )
+getTQuery dict =
+    let
+        t =
+            Maybe.withDefault "nothing" <| Dict.get "teamName" dict
+
+        l =
+            Maybe.withDefault "nothing" <| Dict.get "league" dict
+
+        list =
+            [ ( "teamName", t )
+            , ( "league", l )
+            ]
+
+        temp =
+            Debug.log "list" list
+
+        typeOf =
+            if List.length (Dict.toList dict) < 1 then
+                "all"
+            else
+                String.concat <| List.intersperse " " <| List.map Tuple.first <| List.filter (\( x, y ) -> y /= "nothing") list
+    in
+        ( BasicTQ t l, typeOf )

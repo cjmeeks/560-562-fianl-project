@@ -26,7 +26,7 @@ main =
 
 init : Navigation.Location -> ( Model, Cmd Msg )
 init loc =
-    ( { initModel | curPage = parseLocation loc }, Cmd.batch [ Team.fetchTeams "all" Dict.empty, Player.fetchPlayers "all" Dict.empty ] )
+    ( { initModel | curPage = parseLocation loc }, Cmd.batch [ Team.fetchTeams Dict.empty, Player.fetchPlayers Dict.empty ] )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -147,6 +147,21 @@ update msg model =
             in
                 ( model, Cmd.none )
 
+        Search which ->
+            let
+                cmd =
+                    case which of
+                        "player" ->
+                            Player.fetchPlayers model.playerQuery
+
+                        "team" ->
+                            Team.fetchTeams model.teamQuery
+
+                        _ ->
+                            Cmd.none
+            in
+                ( model, cmd )
+
 
 view : Model -> Html Msg
 view model =
@@ -162,14 +177,14 @@ view model =
         TeamResult ->
             div [ class "my-container" ]
                 [ nav
-                , Search.view teamSearches
+                , Search.view "team" teamSearches
                 , Team.teamTable True model.teamResults
                 ]
 
         PlayerResult ->
             div [ class "my-container" ]
                 [ nav
-                , Search.view playerSearches
+                , Search.view "player" playerSearches
                 , Player.playerTable True model.playerResults
                 ]
 
