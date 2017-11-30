@@ -75,7 +75,7 @@ update msg model =
             ( { model | favoritePlayers = List.filter (\x -> x.firstName /= player.firstName && x.lastName /= player.lastName) model.favoritePlayers }, Cmd.none )
 
         DeleteTeam team ->
-            ( { model | favoriteTeams = List.append model.favoriteTeams [ team ] }, Cmd.none )
+            ( { model | favoriteTeams = List.filter (\x -> x.name /= team.name) model.favoriteTeams }, Cmd.none )
 
         HandleTeams teams ->
             ( { model | teamResults = teams }, Cmd.none )
