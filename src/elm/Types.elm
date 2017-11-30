@@ -160,3 +160,4 @@ type Msg
     | Username String
     | Password String
     | LoginButton
+    | HandleUser Bool

@@ -7,6 +7,8 @@ import Types exposing (Msg(..), Model, Player, Team, User, SearchType(..), initM
 import Bootstrap.Form.Input as Input
 import Bootstrap.Form.InputGroup as Group
 import Bootstrap.Button as Button
+import Json.Decode as Decode
+import Http
 
 
 loginView : Html Msg
@@ -20,12 +22,24 @@ loginView =
             |> Group.predecessors
                 [ Group.span [] [ text "Password" ] ]
             |> Group.view
-                Button.button
-                [ Button.onClick LoginButton ]
-                [ text "Login" ]
+        , Button.button
+            [ Button.success
+            , Button.onClick LoginButton
+            ]
+            [ text "Login" ]
         ]
 
 
 loginCall : User -> Cmd Msg
 loginCall user =
-    Http.send processPlayer <| Http.get ("http://localhost:3000/login/?username=" ++ user.username ++ "&pass=" ++ user.password) (Decode.list decodePlayer)
+    Http.send processUser <| Http.get ("http://localhost:3000/login/?username=" ++ user.username ++ "&pass=" ++ user.password) Decode.bool
+
+
+processUser : Result Http.Error Bool -> Msg
+processUser result =
+    case result of
+        Ok bool ->
+            HandleUser bool
+
+        Err err ->
+            HandleError err

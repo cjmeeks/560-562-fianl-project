@@ -4,7 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Navigation
-import Types exposing (Msg(..), Model, Player, Team, initModel, playerSearches, teamSearches)
+import Types exposing (Msg(..), Model, Player, Team, User, initModel, playerSearches, teamSearches)
 import Routes exposing (Route(..), parseLocation)
 import Bootstrap.CDN as CDN
 import Search
@@ -177,6 +177,19 @@ update msg model =
             in
                 ( { model | user = { user | password = password } }, Cmd.none )
 
+        HandleUser bool ->
+            let
+                user =
+                    model.user
+            in
+                if bool then
+                    ( { model | curPage = Profile }, Cmd.none )
+                else
+                    ( { model | user = User "" "", curPage = Login }, Cmd.none )
+
+        LoginButton ->
+            ( model, Login.loginCall model.user )
+
 
 view : Model -> Html Msg
 view model =
@@ -204,7 +217,11 @@ view model =
                 ]
 
         Login ->
-            Login.loginView
+            div [ class "my-container" ]
+                [ h1 [] [ text "Soccer Database" ]
+                , CDN.stylesheet
+                , Login.loginView
+                ]
 
 
 nav : Html Msg
