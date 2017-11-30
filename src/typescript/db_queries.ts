@@ -41,6 +41,13 @@ const SELECT_PLAYER_TEAM_QUERY: string = "SELECT people.firstName,people.lastNam
                                         + "INNER JOIN teams ON contract.teamID=teams.teamID\n"
                                         + "WHERE teams.name LIKE \"%?%\";";
 
+const SELECT_PLAYER_POS_QUERY: string = "SELECT people.firstName,people.lastName,players.position,players.number,contract.salary,teams.name\n"
+                                        + "FROM people\n"
+                                        + "INNER JOIN players ON people.people_ID=players.player_ID\n"
+                                        + "INNER JOIN contract ON people.people_ID=contract.player_ID\n"
+                                        + "INNER JOIN teams ON contract.teamID=teams.teamID\n"
+                                        + "WHERE players.position LIKE \"%?%\";";
+
 const SELECT_PLAYER_NAME_TEAM_QUERY: string = "SELECT people.firstName,people.lastName,players.position,players.number,contract.salary,teams.name\n"
                                         + "FROM people\n"
                                         + "INNER JOIN players ON people.people_ID=players.player_ID\n"
@@ -48,28 +55,28 @@ const SELECT_PLAYER_NAME_TEAM_QUERY: string = "SELECT people.firstName,people.la
                                         + "INNER JOIN teams ON contract.teamID=teams.teamID\n"
                                         + "WHERE (people.firstName LIKE \"%?%\" OR people.lastName LIKE \"%?%\") AND (teams.name LIKE \"%?%\");";
 
-const SELECT_PLAYER_NAME_TEAM_POSITION_QUERY: string = "SELECT people.firstName,people.lastName,players.position,players.number,contract.salary,teams.name\n"
+const SELECT_PLAYER_NAME_POS_QUERY: string = "SELECT people.firstName,people.lastName,players.position,players.number,contract.salary,teams.name\n"
                                         + "FROM people\n"
                                         + "INNER JOIN players ON people.people_ID=players.player_ID\n"
                                         + "INNER JOIN contract ON people.people_ID=contract.player_ID\n"
                                         + "INNER JOIN teams ON contract.teamID=teams.teamID\n"
-                                        + "WHERE (people.firstName LIKE \"%?%\" OR people.lastName LIKE \"%?%\") AND (teams.name LIKE \"%?%\") AND (player.position LIKE \"%?%\");";
+                                        + "WHERE (people.firstName LIKE \"%?%\" OR people.lastName LIKE \"%?%\") AND (players.position LIKE \"%?%\");";
 
-const SELECT_PLAYER_TEAM_POSITION_QUERY: string = "SELECT people.firstName,people.lastName,players.position,players.number,contract.salary,teams.name\n"
+const SELECT_PLAYER_TEAM_POS_QUERY: string = "SELECT people.firstName,people.lastName,players.position,players.number,contract.salary,teams.name\n"
                                         + "FROM people\n"
                                         + "INNER JOIN players ON people.people_ID=players.player_ID\n"
                                         + "INNER JOIN contract ON people.people_ID=contract.player_ID\n"
                                         + "INNER JOIN teams ON contract.teamID=teams.teamID\n"
-                                        + "WHERE (teams.name LIKE \"%?%\") AND (player.position LIKE \"%?%\");";
+                                        + "WHERE (teams.name LIKE \"%?%\") AND (players.position LIKE \"%?%\");";
 
-const SELECT_PLAYER_POSITION_QUERY: string = "SELECT people.firstName,people.lastName,players.position,players.number,contract.salary,teams.name\n"
+const SELECT_PLAYER_NAME_TEAM_POS_QUERY: string = "SELECT people.firstName,people.lastName,players.position,players.number,contract.salary,teams.name\n"
                                         + "FROM people\n"
                                         + "INNER JOIN players ON people.people_ID=players.player_ID\n"
                                         + "INNER JOIN contract ON people.people_ID=contract.player_ID\n"
                                         + "INNER JOIN teams ON contract.teamID=teams.teamID\n"
-                                        + "WHERE player.position LIKE \"%?%\";";
+                                        + "WHERE (people.firstName LIKE \"%?%\" OR people.lastName LIKE \"%?%\") AND (players.position LIKE \"%?%\") AND (teams.name LIKE \"%?%\");";
 
-//////////////////// Team Queries
+// Team Queries
 const SELECT_ALL_TEAMS_QUERY: string = "SELECT teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, ' ', people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
                                     + "FROM teams\n"
                                     + "INNER JOIN leagues ON teams.playsInLeague=leagues.leagueID\n"
@@ -78,6 +85,32 @@ const SELECT_ALL_TEAMS_QUERY: string = "SELECT teams.name,leagues.name as league
                                     + "INNER JOIN people ON coaches.coach_ID=people.people_ID\n"
                                     + "INNER JOIN seasons ON teams.teamID=seasons.teamID;";
 
+const SELECT_TEAM_NAME_QUERY: string = "SELECT teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, ' ', people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
+                                    + "FROM teams\n"
+                                    + "INNER JOIN leagues ON teams.playsInLeague=leagues.leagueID\n"
+                                    + "INNER JOIN stadiums ON teams.homeStadium=stadiums.stadiumID\n"
+                                    + "INNER JOIN coaches ON teams.teamID=coaches.teamCoaching\n"
+                                    + "INNER JOIN people ON coaches.coach_ID=people.people_ID\n"
+                                    + "INNER JOIN seasons ON teams.teamID=seasons.teamID\n"
+                                    + "WHERE teams.name LIKE \"%?%\";";
+
+const SELECT_TEAM_LEAGUE_QUERY: string = "SELECT teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, ' ', people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
+                                    + "FROM teams\n"
+                                    + "INNER JOIN leagues ON teams.playsInLeague=leagues.leagueID\n"
+                                    + "INNER JOIN stadiums ON teams.homeStadium=stadiums.stadiumID\n"
+                                    + "INNER JOIN coaches ON teams.teamID=coaches.teamCoaching\n"
+                                    + "INNER JOIN people ON coaches.coach_ID=people.people_ID\n"
+                                    + "INNER JOIN seasons ON teams.teamID=seasons.teamID\n"
+                                    + "WHERE leagues.name LIKE \"%?%\";";
+
+const SELECT_TEAM_NAME_LEAGUE_QUERY: string = "SELECT teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, ' ', people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
+                                    + "FROM teams\n"
+                                    + "INNER JOIN leagues ON teams.playsInLeague=leagues.leagueID\n"
+                                    + "INNER JOIN stadiums ON teams.homeStadium=stadiums.stadiumID\n"
+                                    + "INNER JOIN coaches ON teams.teamID=coaches.teamCoaching\n"
+                                    + "INNER JOIN people ON coaches.coach_ID=people.people_ID\n"
+                                    + "INNER JOIN seasons ON teams.teamID=seasons.teamID\n"
+                                    + "WHERE (teams.name LIKE \"%?%\") AND (leagues.name LIKE \"%?%\");";
 
 // User Interaction Queries (signin, logon)
 const CHECK_IF_USERNAME_EXISTS_QUERY: string = "SELECT users.username\n"
@@ -122,7 +155,18 @@ export function players_team_search_query(params, callback) {
 }
 
 export function players_pos_search_query(params, callback) {
-    //TODO: complete function.
+    //Expecting params to be a single variable with the position being searched for.
+    var inserts = params;
+    var sql_query = mysql.format(SELECT_PLAYER_POS_QUERY, inserts);
+    let count = 0;
+    while (count < 2) {
+        sql_query = sql_query.replace("'", "");
+        count++;
+    }
+    connection.query(sql_query, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
 }
 
 export function players_team_and_name_search_query(params, callback) {
@@ -140,26 +184,104 @@ export function players_team_and_name_search_query(params, callback) {
     })
 }
 
-export function players_team_name_and_pos_search_query(params, callback) {
-    //TODO: complete this function.
-}
-
 export function players_team_pos_search_query(params, callback) {
-    //TODO: complete this function.
+    //Expecting first param to be the team being searched for and the second param to be the position.
+    var inserts = [params[0], params[1]];
+    var sql_query = mysql.format(SELECT_PLAYER_TEAM_POS_QUERY, inserts);
+    let count = 0;
+    while (count < 4) {
+        sql_query = sql_query.replace("'", "");
+        count++;
+    }
+    connection.query(sql_query, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
 }
 
 export function players_name_pos_search_query(params, callback) {
-    //TODO: complete this function. 
+    //Expecting first two params to be name params and third to be position param.
+    var inserts = [params[0], params[1], params[2]];
+    var sql_query = mysql.format(SELECT_PLAYER_NAME_POS_QUERY, inserts);
+    let count = 0;
+    while (count < 6) {
+        sql_query = sql_query.replace("'", "");
+        count++;
+    }
+    connection.query(sql_query, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
 }
 export function players__pos_search_query(params, callback) {
     //TODO: complete this function. 
+}
+
+export function players_team_name_and_pos_search_query(params, callback) {
+    //Expecting first two params to be name params, third to be position param, and fourth to be team param.
+    var inserts = [params[0], params[1], params[2], params[3]];
+    var sql_query = mysql.format(SELECT_PLAYER_NAME_TEAM_POS_QUERY, inserts);
+    let count = 0;
+    while (count < 8) {
+        sql_query = sql_query.replace("'", "");
+        count++;
+    }
+    connection.query(sql_query, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
 }
 
 // Teams SQL Calls
 export function teams_query(callback) {
     connection.query(SELECT_ALL_TEAMS_QUERY, function(error, results, fields) {
         if (error) throw error;
-        callback(results)
+        callback(results);
+    })
+}
+
+export function teams_name_search_query(params, callback) {
+    //Expecting params to be team name param.
+    var inserts = params;
+    var sql_query = mysql.format(SELECT_TEAM_NAME_QUERY, inserts);
+    let count = 0;
+    while (count < 2) {
+        sql_query = sql_query.replace("'", "");
+        count++;
+    }
+    connection.query(sql_query, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
+}
+
+export function teams_league_search_query(params, callback) {
+    //Expecting params to be team league param.
+    var inserts = params;
+    var sql_query = mysql.format(SELECT_TEAM_LEAGUE_QUERY, inserts);
+    let count = 0;
+    while (count < 2) {
+        sql_query = sql_query.replace("'", "");
+        count++;
+    }
+    connection.query(sql_query, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
+}
+
+export function teams_name_league_search_query(params, callback) {
+    //Expecting params to be a list with the first element being team name and second being team league.
+    var inserts = [params[0], params[1]];
+    var sql_query = mysql.format(SELECT_TEAM_NAME_LEAGUE_QUERY, inserts);
+    let count = 0;
+    while (count < 4) {
+        sql_query = sql_query.replace("'", "");
+        count++;
+    }
+    connection.query(sql_query, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
     })
 }
 
@@ -179,4 +301,28 @@ export function insert_new_user_query(params, callback) {
 export function check_login_query(params, callback) {
     //Expecting params to be a list with two params, username and password
     var inserts = [params[0], params[1]];
+}
+
+export function insert_favorite_player_query(params, callback) {
+    //TODO: finish this function.
+}
+
+export function insert_favorite_team_query(params, callback) {
+    //TODO: finish this function.
+}
+
+export function delete_favorite_team_query(params, callback) {
+    //TODO: finish this function.
+}
+
+export function delete_favoite_player_query(params, callback) {
+    //TODO: finish this function.
+}
+
+export function update_favorite_player_query(params, callback) {
+    //TODO: finish this function.
+}
+
+export function update_favorite_team_query(params, callback) {
+    //TODO: finish this function.
 }
