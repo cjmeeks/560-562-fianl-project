@@ -55,16 +55,29 @@ module.exports = app => {
     })
   })
   app.get('/getPlayers/:fName/:lName/:teamName/:position', (req,res) =>{
-    res.send(req.params)
+    var newInserts = [req.params.fName, req.params.lName, req.params.teamName, req.params.position ]
+    var players = db_conn.players_team_name_and_pos_search_query(newInserts, function(data) {
+      res.send(data);
+    })
   })
   app.get('/getPlayers/:position', (req,res) =>{
-    res.send(req.params)
+    var newInserts = [ req.params.position ]
+    var players = db_conn.players_pos_search_query(newInserts, function(data) {
+      res.send(data);
+    })
   })
   app.get('/getPlayers/tp/:teamName/:position', (req,res) =>{
-    res.send(req.params)
+    var newInserts = [ req.params.teamName, req.params.position ]
+    var players = db_conn.players_team_pos_search_query(newInserts, function(data) {
+      res.send(data);
+    })
   })
+
   app.get('/getPlayers/flp/:fName/:lName/:position', (req,res) =>{
-    res.send(req.params)
+    var newInserts = [req.params.fName, req.params.lName, req.params.position ]
+    var players = db_conn.players_name_pos_search_query(newInserts, function(data) {
+      res.send(data);
+    })
   })
 
   //Team Endpoints
@@ -75,15 +88,24 @@ module.exports = app => {
   })
 
   app.get('/getTeams/:tName', (req,res) =>{
-    res.send(req.params)
+    var newInserts = [ req.params.teamName ]
+    var players = db_conn.teams_name_search_query(newInserts, function(data) {
+      res.send(data);
+    })
   })
 
   app.get('/getTeams/:tName/:league', (req,res) =>{
-    res.send(req.params)
+    var newInserts = [ req.params.teamName, req.params.league ]
+    var players = db_conn.teams_name_league_search_query(newInserts, function(data) {
+      res.send(data);
+    })
   })
   //need to have diff route when same number of params given
   app.get('/getTeams/league/:league', (req,res) =>{
-    res.send(req.params)
+    var newInserts = [ req.params.league ]
+    var players = db_conn.teams_league_search_query(newInserts, function(data) {
+      res.send(data);
+    })
   })
 
   //these implementations tbd
@@ -101,13 +123,13 @@ module.exports = app => {
 
 
   //Login Endpoints
-  app.get('/signup', (req, res) => {
+  app.get('/signup/:username/:password', (req, res) => {
     userLoginSignup.filler();
     //The value passed will have to be changed.
     userLoginSignup.checkUsername("bob", "password");
   })
 
-  app.get('/login', (req, res) => {
+  app.get('/login/:user/:password', (req, res) => {
     userLoginSignup.filler();
     userLoginSignup.checkLogin("bob", "password", function(data) {
       res.send(data);
