@@ -20,6 +20,7 @@ const SELECT_PLAYER_FNAME_QUERY: string = "SELECT people.firstName,people.lastNa
                                         + "INNER JOIN contract ON people.people_ID=contract.player_ID\n"
                                         + "INNER JOIN teams ON contract.teamID=teams.teamID\n"
                                         + "WHERE people.firstName LIKE \"%?%\";";
+
 const SELECT_PLAYER_LNAME_QUERY: string = "SELECT people.firstName,people.lastName,players.position,players.number,contract.salary,teams.name\n"
                                         + "FROM people\n"
                                         + "INNER JOIN players ON people.people_ID=players.player_ID\n"
@@ -112,9 +113,33 @@ const SELECT_TEAM_NAME_LEAGUE_QUERY: string = "SELECT teams.name,leagues.name as
                                     + "INNER JOIN seasons ON teams.teamID=seasons.teamID\n"
                                     + "WHERE (teams.name LIKE \"%?%\") AND (leagues.name LIKE \"%?%\");";
 
-// User Interaction Queries (signin, logon)
+// Sign in and Login SQL Calls
 const CHECK_IF_USERNAME_EXISTS_QUERY: string = "SELECT users.username\n"
                                     + "FROM users;";
+
+const CHECK_LOGIN_QUERY: string = "SELECT *\n"
+                                + "FROM users\n"
+                                + "WHERE (users.username LIKE ?) AND (users.password LIKE ?);";
+
+const INSERT_NEW_USER_QUERY: string = "INSERT INTO users(username, password)\n"
+                                    + "VALUES(?, ?);";
+
+// User interaction SQL Calls
+const UPDATE_FAVORITE_USER_PLAYER_QUERY: string = "UPDATE users\n"
+                                                + "SET favoritePlayer = ?\n"
+                                                + "WHERE users.username LIKE ?;";
+
+const UPDATE_FAVORITE_USER_TEAM_QUERY: string = "UPDATE users\n"
+                                                + "SET favoriteTeam = ?\n"
+                                                + "WHERE users.username LIKE ?;";
+
+const DELETE_FAVORITE_USER_PLAYER_QUERY: string = "UPDATE users\n"
+                                                + "SET favoritePlayer = NULL\n"
+                                                + "WHERE users.username LIKE ?;";
+
+const DELETE_FAVORITE_USER_TEAM_QUERY: string = "UPDATE users\n"
+                                                + "SET favoriteTeam = NULL\n"
+                                                + "WHERE users.username LIKE ?;";
 
 // Player SQL calls
 export function players_query(callback) {
@@ -213,9 +238,6 @@ export function players_name_pos_search_query(params, callback) {
         callback(results);
     })
 }
-export function players__pos_search_query(params, callback) {
-    //TODO: complete this function. 
-}
 
 export function players_team_name_and_pos_search_query(params, callback) {
     //Expecting first two params to be name params, third to be position param, and fourth to be team param.
@@ -296,39 +318,70 @@ export function get_username_query(callback) {
 export function insert_new_user_query(params, callback) {
     //Expecting params to be a list with two params, username and password
     var inserts = [params[0], params[1]];
+    var sql_query = mysql.format(INSERT_NEW_USER_QUERY, inserts);
+    connection.query(INSERT_NEW_USER_QUERY, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
 }
 
 export function check_login_query(params, callback) {
     //Expecting params to be a list with two params, username and password
     var inserts = [params[0], params[1]];
-    if(inserts[0] == "bob" && inserts[1] == "password"){
-        callback(true)
-    }
-    else{
-        callback(false)
-    }
+    var sql_query = mysql.format(CHECK_LOGIN_QUERY, inserts);
+    connection.query(CHECK_LOGIN_QUERY, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
 }
 
-export function insert_favorite_player_query(params, callback) {
-    //TODO: finish this function.
+// User interaction SQL Calls.
+export function update_favorite_player_query(params, callback) {
+    //Expecting params to be two variables, first a playerid and second a username.
+    var inserts = [params[0], params[1]];
+    var sql_query = mysql.format(UPDATE_FAVORITE_USER_PLAYER_QUERY, inserts);
+    let count = 0;
+    while (count < 2) {
+        sql_query = sql_query.replace("'", "");
+        count++;
+    }
+    connection.query(sql_query, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
 }
 
-export function insert_favorite_team_query(params, callback) {
-    //TODO: finish this function.
+export function update_favoite_team_query(params, callback) {
+    //Expecting params to be two variables, first a teamID and second a username.
+    var inserts = [params[0], params[1]];
+    var sql_query = mysql.format(UPDATE_FAVORITE_USER_TEAM_QUERY, inserts);
+    let count = 0;
+    while (count < 2) {
+        sql_query = sql_query.replace("'", "");
+        count++;
+    }
+    connection.query(sql_query, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
+}
+
+export function delete_favorite_player_query(params, callback) {
+    //Expecting params to be one variable, a username.
+    var inserts = params;
+    var sql_query = mysql.format(DELETE_FAVORITE_USER_PLAYER_QUERY, inserts);
+    connection.query(sql_query, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
 }
 
 export function delete_favorite_team_query(params, callback) {
-    //TODO: finish this function.
-}
-
-export function delete_favoite_player_query(params, callback) {
-    //TODO: finish this function.
-}
-
-export function update_favorite_player_query(params, callback) {
-    //TODO: finish this function.
-}
-
-export function update_favorite_team_query(params, callback) {
-    //TODO: finish this function.
+    //Expecting params to be one variable, a username.
+    var inserts = params;
+    var sql_query = mysql.format(DELETE_FAVORITE_USER_TEAM_QUERY, inserts);
+    connection.query(sql_query, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
 }
