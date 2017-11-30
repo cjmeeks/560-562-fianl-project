@@ -99,6 +99,10 @@ fetchPlayers dict =
                 Http.send processPlayer <| Http.get "http://localhost:3000/getAllPlayers" (Decode.list decodePlayer)
 
 
+
+-- addFavPlayer : Int ->
+
+
 type alias BasicPQ =
     { fN : String
     , lN : String

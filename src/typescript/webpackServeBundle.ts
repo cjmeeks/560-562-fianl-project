@@ -136,6 +136,36 @@ module.exports = app => {
     })
   })
 
+
+
+  //favorite
+
+  app.get('/favPlayer/add/:id/:user', (req,res) =>{
+    var newInserts = [ req.params.id, req.params.user ]
+    var players = db_conn.update_favorite_player_query(newInserts, function(data) {
+      res.send(true);
+    })
+  })
+  app.get('/favPlayer/delete/:id/:user', (req,res) =>{
+    var newInserts = [ req.params.id, req.params.user ]
+    var players = db_conn.delete_favorite_player_query(newInserts, function(data) {
+      res.send(true);
+    })
+  })
+
+  app.get('/favTeam/add/:id/:user', (req,res) =>{
+    var newInserts = [ req.params.id, req.params.user ]
+    var players = db_conn.update_favoite_team_query(newInserts, function(data) {
+      res.send(true);
+    })
+  })
+  app.get('/favTeam/delete/:id/:user', (req,res) =>{
+    var newInserts = [ req.params.id, req.params.user ]
+    var players = db_conn.delete_favorite_team_query(newInserts, function(data) {
+      res.send(true);
+    })
+  })
+
   //Test Endpoints
   app.get('/testEndpoint', (req, res) => {
     var inserts = ["erso", "erso", "Sporting"];

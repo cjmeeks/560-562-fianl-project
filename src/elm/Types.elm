@@ -9,7 +9,8 @@ import Dict
 
 
 type alias Player =
-    { firstName : String
+    { id : Int
+    , firstName : String
     , lastName : String
     , position : String
     , jerseyNumber : Int
@@ -19,7 +20,8 @@ type alias Player =
 
 
 initPlayer =
-    { firstName = " asdf"
+    { id = 0
+    , firstName = " asdf"
     , lastName = " asdf"
     , position = " asdf"
     , jerseyNumber = 0
@@ -31,6 +33,7 @@ initPlayer =
 decodePlayer : Decoder Player
 decodePlayer =
     decode Player
+        |> optional "player_ID" int -1
         |> optional "firstName" string "nothing"
         |> optional "lastName" string "nothing"
         |> optional "position" string "nothing"
@@ -40,7 +43,8 @@ decodePlayer =
 
 
 type alias Team =
-    { name : String
+    { id : Int
+    , name : String
     , league : String
     , city : String
     , yearFounded : Int
@@ -52,7 +56,8 @@ type alias Team =
 
 
 initTeam =
-    { name = "team"
+    { id = 0
+    , name = "team"
     , league = "team"
     , city = "team"
     , yearFounded = 0
@@ -66,6 +71,7 @@ initTeam =
 decodeTeam : Decoder Team
 decodeTeam =
     decode Team
+        |> optional "teamID" int -1
         |> optional "name" string "nothing"
         |> optional "leagueName" string "nothing"
         |> optional "city" string "nothing"
