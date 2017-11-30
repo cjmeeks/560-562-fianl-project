@@ -37,21 +37,14 @@ module.exports = app => {
     res.send('helloWorld ' + req.query.name)
   })
   app.get('/getAllPlayers', (req,res) =>{
-    var players = db_conn.players_query()
-    // var arr = []
-    // for (let result of players.results){
-    //     var temp = {
-    //       firstName : result.firstName,
-    //       lastName : result.lastName,
-    //       position : result.position,
-    //       number : result.number,
-    //       salary : result.salary,
-    //       name : result.name
-    //   }
-    //   arr.push(temp);
-    // }
-    console.log(players);
-    res.send('temp')
+    var players = db_conn.players_query(function(data){
+      res.send(data)
+    })
+  })
+  app.get('/getAllTeams', (req,res) =>{
+    var teams = db_conn.teams_query(function(data){
+      res.send(data)
+    })
   })
   app.get('/getPlayers/:fName', (req,res) =>{
     res.send(req.params)
@@ -64,12 +57,6 @@ module.exports = app => {
   })
   app.get('/getPlayers/:fName/:lName/:teamName/:position', (req,res) =>{
     res.send(req.params)
-  })
-  app.get('/getPlayers', (req, res) => {
-    db_conn.players_query();
-  })
-  app.get('/getTeams', (req, res) => {
-    db_conn.teams_query();
   })
 }
 

@@ -21,25 +21,22 @@ const SELECT_ALL_TEAMS_QUERY: string= "SELECT teams.name,leagues.name as leagueN
                                     + "INNER JOIN people ON coaches.coach_ID=people.people_ID\n"
                                     + "INNER JOIN seasons ON teams.teamID=seasons.teamID;"
 
-export function players_query() {
+export function players_query(callback) {
     connection.connect();
     connection.query(SELECT_ALL_PLAYERS_QUERY, function(error, results, fields) {
         if (error) throw error;
-        return(results);
+        console.log(results.length)
+        callback(results);
     })
     connection.end();
 }
 
-export function teams_query() {
+export function teams_query(callback) {
     connection.connect();
     var response;
     connection.query(SELECT_ALL_TEAMS_QUERY, function(error, results, fields) {
         if (error) throw error;
-        for (let result of results) {
-            console.log(result)
-        }
-        response = results;
+        callback(results)
     })
     connection.end();
-    return(response);
 }
