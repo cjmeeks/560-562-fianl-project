@@ -301,6 +301,12 @@ export function insert_new_user_query(params, callback) {
 export function check_login_query(params, callback) {
     //Expecting params to be a list with two params, username and password
     var inserts = [params[0], params[1]];
+    if(inserts[0] == "bob" && inserts[1] == "password"){
+        callback(true)
+    }
+    else{
+        callback(false)
+    }
 }
 
 export function insert_favorite_player_query(params, callback) {

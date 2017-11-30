@@ -12,6 +12,7 @@ import Player
 import Team
 import Dict
 import Array
+import Login
 
 
 main : Program Never Model Msg
@@ -162,6 +163,20 @@ update msg model =
             in
                 ( model, cmd )
 
+        Username username ->
+            let
+                user =
+                    model.user
+            in
+                ( { model | user = { user | username = username } }, Cmd.none )
+
+        Password password ->
+            let
+                user =
+                    model.user
+            in
+                ( { model | user = { user | password = password } }, Cmd.none )
+
 
 view : Model -> Html Msg
 view model =
@@ -187,6 +202,9 @@ view model =
                 , Search.view "player" playerSearches
                 , Player.playerTable True model.playerResults
                 ]
+
+        Login ->
+            Login.loginView
 
 
 nav : Html Msg

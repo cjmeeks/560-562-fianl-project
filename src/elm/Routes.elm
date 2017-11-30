@@ -8,12 +8,14 @@ type Route
     = Profile
     | TeamResult
     | PlayerResult
+    | Login
 
 
 matchers : Parser (Route -> a) a
 matchers =
     oneOf
-        [ map Profile top
+        [ map Login top
+        , map Login (s "login")
         , map Profile (s "profile")
         , map TeamResult (s "teams")
         , map PlayerResult (s "players")

@@ -103,6 +103,12 @@ teamSearches =
     ]
 
 
+type alias User =
+    { username : String
+    , password : String
+    }
+
+
 type alias Model =
     { favoriteTeams : List Team
     , teamResults : List Team
@@ -112,6 +118,7 @@ type alias Model =
     , fetching : Data
     , playerQuery : Dict.Dict String String
     , teamQuery : Dict.Dict String String
+    , user : User
     }
 
 
@@ -125,6 +132,7 @@ initModel =
     , fetching = Noop
     , playerQuery = Dict.empty
     , teamQuery = Dict.empty
+    , user = User "" ""
     }
 
 
@@ -149,3 +157,6 @@ type Msg
     | HandlePlayers (List Player)
     | HandleError Http.Error
     | Search String
+    | Username String
+    | Password String
+    | LoginButton
