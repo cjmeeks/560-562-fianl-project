@@ -106,7 +106,18 @@ teamSearches =
 type alias User =
     { username : String
     , password : String
+    , favoriteTeam : Int
+    , favoritePlayer : Int
     }
+
+
+decodeUser : Decoder User
+decodeUser =
+    decode User
+        |> optional "username" string "nothing"
+        |> optional "password" string "nothing"
+        |> optional "favoriteTeam" int -1
+        |> optional "favoritePlayer" int -1
 
 
 type alias Model =
@@ -132,7 +143,7 @@ initModel =
     , fetching = Noop
     , playerQuery = Dict.empty
     , teamQuery = Dict.empty
-    , user = User "" ""
+    , user = User "" "" 0 0
     }
 
 
@@ -160,4 +171,4 @@ type Msg
     | Username String
     | Password String
     | LoginButton
-    | HandleUser Bool
+    | HandleUser User

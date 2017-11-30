@@ -119,7 +119,7 @@ const CHECK_IF_USERNAME_EXISTS_QUERY: string = "SELECT users.username\n"
 
 const CHECK_LOGIN_QUERY: string = "SELECT *\n"
                                 + "FROM users\n"
-                                + "WHERE (users.username LIKE ?) AND (users.password LIKE ?);";
+                                + "WHERE users.username = \"?\" AND users.password = \"?\";";
 
 const INSERT_NEW_USER_QUERY: string = "INSERT INTO users(username, password)\n"
                                     + "VALUES(?, ?);";
@@ -127,19 +127,19 @@ const INSERT_NEW_USER_QUERY: string = "INSERT INTO users(username, password)\n"
 // User interaction SQL Calls
 const UPDATE_FAVORITE_USER_PLAYER_QUERY: string = "UPDATE users\n"
                                                 + "SET favoritePlayer = ?\n"
-                                                + "WHERE users.username LIKE ?;";
+                                                + "WHERE users.username LIKE \"?\";";
 
 const UPDATE_FAVORITE_USER_TEAM_QUERY: string = "UPDATE users\n"
                                                 + "SET favoriteTeam = ?\n"
-                                                + "WHERE users.username LIKE ?;";
+                                                + "WHERE users.username LIKE \"?\";";
 
 const DELETE_FAVORITE_USER_PLAYER_QUERY: string = "UPDATE users\n"
                                                 + "SET favoritePlayer = NULL\n"
-                                                + "WHERE users.username LIKE ?;";
+                                                + "WHERE users.username LIKE \"?\";";
 
 const DELETE_FAVORITE_USER_TEAM_QUERY: string = "UPDATE users\n"
                                                 + "SET favoriteTeam = NULL\n"
-                                                + "WHERE users.username LIKE ?;";
+                                                + "WHERE users.username LIKE \"?\";";
 
 // Player SQL calls
 export function players_query(callback) {

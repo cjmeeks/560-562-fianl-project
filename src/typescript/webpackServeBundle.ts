@@ -131,7 +131,7 @@ module.exports = app => {
 
   app.get('/login/:user/:password', (req, res) => {
     userLoginSignup.filler();
-    userLoginSignup.checkLogin("bob", "password", function(data) {
+    userLoginSignup.checkLogin(req.params.user, req.params.password, function(data) {
       res.send(data);
     })
   })

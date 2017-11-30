@@ -177,15 +177,8 @@ update msg model =
             in
                 ( { model | user = { user | password = password } }, Cmd.none )
 
-        HandleUser bool ->
-            let
-                user =
-                    model.user
-            in
-                if bool then
-                    ( { model | curPage = Profile }, Cmd.none )
-                else
-                    ( { model | user = User "" "", curPage = Login }, Cmd.none )
+        HandleUser user ->
+            ( { model | user = user, curPage = Profile }, Cmd.none )
 
         LoginButton ->
             ( model, Login.loginCall model.user )
