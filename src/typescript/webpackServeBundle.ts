@@ -44,13 +44,31 @@ module.exports = app => {
   app.get('/getPlayers/:fName', (req,res) =>{
     res.send(req.params)
   })
-  app.get('/getPlayers/:fName/:lName', (req,res) =>{
+  app.get('/getPlayers/:lName', (req,res) =>{
     res.send(req.params)
+  })
+  app.get('/getPlayers/:fName/:lName', (req,res) =>{
+    var newInserts = [req.params.fName, req.params.lName ]
+    var players = db_conn.players_name_search_query(newInserts, function(data) {
+      res.send(data);
+    })
   })
   app.get('/getPlayers/:fName/:lName/:teamName', (req,res) =>{
-    res.send(req.params)
+    var newInserts = [req.params.fName, req.params.lName, req.params.teamName ]
+    var players = db_conn.players_team_and_name_search_query(newInserts, function(data) {
+      res.send(data);
+    })
   })
   app.get('/getPlayers/:fName/:lName/:teamName/:position', (req,res) =>{
+    res.send(req.params)
+  })
+  app.get('/getPlayers/:position', (req,res) =>{
+    res.send(req.params)
+  })
+  app.get('/getPlayers/:teamName/:position', (req,res) =>{
+    res.send(req.params)
+  })
+  app.get('/getPlayers/:fName/:lName/:position', (req,res) =>{
     res.send(req.params)
   })
 
@@ -59,6 +77,33 @@ module.exports = app => {
     var teams = db_conn.teams_query(function(data){
       res.send(data)
     })
+  })
+
+  app.get('/getTeams/:tName', (req,res) =>{
+    res.send(req.params)
+  })
+
+  app.get('/getTeams/:tName/:league', (req,res) =>{
+    res.send(req.params)
+  })
+  app.get('/getTeams/:league', (req,res) =>{
+    res.send(req.params)
+  })
+  app.get('/getTeams/:tName', (req,res) =>{
+    res.send(req.params)
+  })
+
+  //these implementations tbd
+  //they need exact greater than less than and between for each
+  // for implementation of advanced search
+  app.get('/getTeams/:wins', (req,res) =>{
+    res.send(req.params)
+  })
+  app.get('/getTeams/:losses', (req,res) =>{
+    res.send(req.params)
+  })
+  app.get('/getTeams/:ties', (req,res) =>{
+    res.send(req.params)
   })
 
 

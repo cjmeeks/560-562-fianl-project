@@ -14,6 +14,19 @@ const SELECT_ALL_PLAYERS_QUERY: string = "SELECT people.firstName,people.lastNam
                                         + "INNER JOIN contract ON people.people_ID=contract.player_ID\n"
                                         + "INNER JOIN teams ON contract.teamID=teams.teamID;";
 
+const SELECT_PLAYER_FNAME_QUERY: string = "SELECT people.firstName,people.lastName,players.position,players.number,contract.salary,teams.name\n"
+                                        + "FROM people\n"
+                                        + "INNER JOIN players ON people.people_ID=players.player_ID\n"
+                                        + "INNER JOIN contract ON people.people_ID=contract.player_ID\n"
+                                        + "INNER JOIN teams ON contract.teamID=teams.teamID\n"
+                                        + "WHERE people.firstName LIKE \"%?%\";";
+const SELECT_PLAYER_LNAME_QUERY: string = "SELECT people.firstName,people.lastName,players.position,players.number,contract.salary,teams.name\n"
+                                        + "FROM people\n"
+                                        + "INNER JOIN players ON people.people_ID=players.player_ID\n"
+                                        + "INNER JOIN contract ON people.people_ID=contract.player_ID\n"
+                                        + "INNER JOIN teams ON contract.teamID=teams.teamID\n"
+                                        + "WHERE people.lastName LIKE \"%?%\";";
+
 const SELECT_PLAYER_NAME_QUERY: string = "SELECT people.firstName,people.lastName,players.position,players.number,contract.salary,teams.name\n"
                                         + "FROM people\n"
                                         + "INNER JOIN players ON people.people_ID=players.player_ID\n"
@@ -35,7 +48,28 @@ const SELECT_PLAYER_NAME_TEAM_QUERY: string = "SELECT people.firstName,people.la
                                         + "INNER JOIN teams ON contract.teamID=teams.teamID\n"
                                         + "WHERE (people.firstName LIKE \"%?%\" OR people.lastName LIKE \"%?%\") AND (teams.name LIKE \"%?%\");";
 
-// Team Queries
+const SELECT_PLAYER_NAME_TEAM_POSITION_QUERY: string = "SELECT people.firstName,people.lastName,players.position,players.number,contract.salary,teams.name\n"
+                                        + "FROM people\n"
+                                        + "INNER JOIN players ON people.people_ID=players.player_ID\n"
+                                        + "INNER JOIN contract ON people.people_ID=contract.player_ID\n"
+                                        + "INNER JOIN teams ON contract.teamID=teams.teamID\n"
+                                        + "WHERE (people.firstName LIKE \"%?%\" OR people.lastName LIKE \"%?%\") AND (teams.name LIKE \"%?%\") AND (player.position LIKE \"%?%\");";
+
+const SELECT_PLAYER_TEAM_POSITION_QUERY: string = "SELECT people.firstName,people.lastName,players.position,players.number,contract.salary,teams.name\n"
+                                        + "FROM people\n"
+                                        + "INNER JOIN players ON people.people_ID=players.player_ID\n"
+                                        + "INNER JOIN contract ON people.people_ID=contract.player_ID\n"
+                                        + "INNER JOIN teams ON contract.teamID=teams.teamID\n"
+                                        + "WHERE (teams.name LIKE \"%?%\") AND (player.position LIKE \"%?%\");";
+
+const SELECT_PLAYER_POSITION_QUERY: string = "SELECT people.firstName,people.lastName,players.position,players.number,contract.salary,teams.name\n"
+                                        + "FROM people\n"
+                                        + "INNER JOIN players ON people.people_ID=players.player_ID\n"
+                                        + "INNER JOIN contract ON people.people_ID=contract.player_ID\n"
+                                        + "INNER JOIN teams ON contract.teamID=teams.teamID\n"
+                                        + "WHERE player.position LIKE \"%?%\";";
+
+//////////////////// Team Queries
 const SELECT_ALL_TEAMS_QUERY: string = "SELECT teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, ' ', people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
                                     + "FROM teams\n"
                                     + "INNER JOIN leagues ON teams.playsInLeague=leagues.leagueID\n"
@@ -115,6 +149,9 @@ export function players_team_pos_search_query(params, callback) {
 }
 
 export function players_name_pos_search_query(params, callback) {
+    //TODO: complete this function. 
+}
+export function players__pos_search_query(params, callback) {
     //TODO: complete this function. 
 }
 
