@@ -35,7 +35,23 @@ module.exports = app => {
   })
   app.get('/hello', (req,res) =>{
     res.send('helloWorld ' + req.query.name)
-    
+  })
+  app.get('/getAllPlayers', (req,res) =>{
+    var players = db_conn.players_query()
+    // var arr = []
+    // for (let result of players.results){
+    //     var temp = {
+    //       firstName : result.firstName,
+    //       lastName : result.lastName,
+    //       position : result.position,
+    //       number : result.number,
+    //       salary : result.salary,
+    //       name : result.name
+    //   }
+    //   arr.push(temp);
+    // }
+    console.log(players);
+    res.send('temp')
   })
   app.get('/getPlayers/:fName', (req,res) =>{
     res.send(req.params)

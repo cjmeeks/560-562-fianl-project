@@ -25,20 +25,21 @@ export function players_query() {
     connection.connect();
     connection.query(SELECT_ALL_PLAYERS_QUERY, function(error, results, fields) {
         if (error) throw error;
-        for (let result of results) {
-            console.log(result);
-        }
+        return(results);
     })
     connection.end();
 }
 
 export function teams_query() {
     connection.connect();
+    var response;
     connection.query(SELECT_ALL_TEAMS_QUERY, function(error, results, fields) {
         if (error) throw error;
         for (let result of results) {
             console.log(result)
         }
+        response = results;
     })
     connection.end();
+    return(response);
 }
