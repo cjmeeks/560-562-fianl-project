@@ -67,7 +67,7 @@ decodeTeam : Decoder Team
 decodeTeam =
     decode Team
         |> optional "name" string "nothing"
-        |> optional "league" string "nothing"
+        |> optional "leagueName" string "nothing"
         |> optional "city" string "nothing"
         |> optional "yearFounded" int -1
         |> optional "coachName" string "nothing"
