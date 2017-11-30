@@ -178,3 +178,4 @@ type Msg
     | Password String
     | LoginButton
     | HandleUser User
+    | HandleFav Bool

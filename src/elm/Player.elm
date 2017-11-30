@@ -3,7 +3,7 @@ module Player exposing (playerTable, fetchPlayers)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Types exposing (Msg(..), Model, Player, Team, SearchType(..), initModel, decodePlayer)
+import Types exposing (Msg(..), Model, Player, Team, SearchType(..), User, initModel, decodePlayer)
 import Bootstrap.Form.Input as Input
 import Bootstrap.Button as Button
 import Http
@@ -99,8 +99,27 @@ fetchPlayers dict =
                 Http.send processPlayer <| Http.get "http://localhost:3000/getAllPlayers" (Decode.list decodePlayer)
 
 
+addFavPlayer : String -> Int -> User -> Cmd Msg
+addFavPlayer typeof id user =
+    case typeof of
+        "add" ->
+            Http.send processFavPlayer <| Http.get ("http://localhost:3000/favPlayer/add/" ++ (toString id) ++ "/" ++ user.username) Decode.bool
 
--- addFavPlayer : Int ->
+        "delete" ->
+            Http.send processFavPlayer <| Http.get ("http://localhost:3000/favPlayer/delete/" ++ (toString id) ++ "/" ++ user.username) Decode.bool
+
+        _ ->
+            Http.send processFavPlayer <| Http.get ("http://localhost:3000/favPlayer/add/" ++ (toString id) ++ "/" ++ user.username) Decode.bool
+
+
+processFavPlayer : Result Http.Error Bool -> Msg
+processFavPlayer result =
+    case result of
+        Ok players ->
+            HandleFav players
+
+        Err err ->
+            HandleError err
 
 
 type alias BasicPQ =
