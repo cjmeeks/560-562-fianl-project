@@ -94,22 +94,22 @@ module.exports = app => {
   })
 
   app.get('/getTeams/:tName', (req,res) =>{
-    var newInserts = [ req.params.teamName ]
-    var players = db_conn.teams_name_search_query(newInserts, function(data) {
+    var newInserts = req.params.teamName
+    var teams = db_conn.teams_name_search_query(newInserts, function(data) {
       res.send(data);
     })
   })
 
   app.get('/getTeams/:tName/:league', (req,res) =>{
     var newInserts = [ req.params.teamName, req.params.league ]
-    var players = db_conn.teams_name_league_search_query(newInserts, function(data) {
+    var teams = db_conn.teams_name_league_search_query(newInserts, function(data) {
       res.send(data);
     })
   })
   //need to have diff route when same number of params given
   app.get('/getTeams/league/:league', (req,res) =>{
-    var newInserts = [ req.params.league ]
-    var players = db_conn.teams_league_search_query(newInserts, function(data) {
+    var newInserts = req.params.league
+    var teams = db_conn.teams_league_search_query(newInserts, function(data) {
       res.send(data);
     })
   })
