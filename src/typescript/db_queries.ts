@@ -119,7 +119,7 @@ const CHECK_IF_USERNAME_EXISTS_QUERY: string = "SELECT users.username\n"
 
 const CHECK_LOGIN_QUERY: string = "SELECT *\n"
                                 + "FROM users\n"
-                                + "WHERE users.username = \'?\' AND users.password = \'?\';";
+                                + "WHERE users.username = \"?\" AND users.password = \"?\";";
 
 const INSERT_NEW_USER_QUERY: string = "INSERT INTO users(username, password)\n"
                                     + "VALUES(?, ?);";
@@ -138,6 +138,45 @@ const UPDATE_FAVORITE_USER_TEAM_QUERY: string = "UPDATE users\n"
 const DELETE_FAVORITE_USER_TEAM_QUERY: string = "UPDATE users\n"
                                                 + "SET favoriteTeam = NULL\n"
                                                 + "WHERE users.username LIKE \"?\";";
+
+// Advanced player SQL calls
+const SEARCH_SALARY_SPECIFIC_QUERY: string = "SELECT players.player_ID, people.firstName,people.lastName,players.position,players.number,contract.salary,teams.name\n"
+                                        + "FROM people\n"
+                                        + "INNER JOIN players ON people.people_ID=players.player_ID\n"
+                                        + "INNER JOIN contract ON people.people_ID=contract.player_ID\n"
+                                        + "INNER JOIN teams ON contract.teamID=teams.teamID\n"
+                                        + "WHERE contract.salary = ?;";
+
+const SEARCH_SALARY_BETWEEN_QUERY: string = "SELECT players.player_ID, people.firstName,people.lastName,players.position,players.number,contract.salary,teams.name\n"
+                                        + "FROM people\n"
+                                        + "INNER JOIN players ON people.people_ID=players.player_ID\n"
+                                        + "INNER JOIN contract ON people.people_ID=contract.player_ID\n"
+                                        + "INNER JOIN teams ON contract.teamID=teams.teamID\n"
+                                        + "WHERE contract.salary BETWEEN ? AND ?;";
+
+// Team wins, losses, ties SQL calls
+const TEAM_WINS_SQL: string = "SELECT teams.name\n"
+                            + "FROM teams\n"
+                            + "WHERE teams.wins = ?;";
+
+const TEAM_LOSSES_SQL: string = "SELECT teams.name\n"
+                            + "FROM teams\n"
+                            + "WHERE teams.losses = ?;";
+
+const TEAM_TIES_SQL: string = "SELECT teams.name\n"
+                            + "FROM teams\n"
+                            + "WHERE teams.ties = ?;";
+
+// Number of players per position
+const NUM_PLAYERS_PER_POS_SQL: string = "SELECT players.position, COUNT(*) as num_at_position\n"
+                                        + "FROM players\n"
+                                        + "GROUP BY players.position;";
+
+// Sum of salaries for team
+const SUM_OF_SALARIES_FOR_TEAM_SQL: string = "SELECT teams.name, SUM(contract.salary) as total_contracts\n"
+                                            + "FROM teams\n"
+                                            + "INNER JOIN contract ON teams.teamID=contract.teamID\n"
+                                            + "WHERE teams.name LIKE \"?\";";
 
 // Player SQL calls
 export function players_query(callback) {
@@ -378,6 +417,78 @@ export function delete_favorite_team_query(params, callback) {
     //Expecting params to be one variable, a username.
     var inserts = params;
     var sql_query = mysql.format(DELETE_FAVORITE_USER_TEAM_QUERY, inserts);
+    connection.query(sql_query, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
+}
+
+// Salary SQL functions
+export function select_salary_exact_amount_query(params, callback) {
+    //Expecting params to be one variable, a salary.
+    var inserts = params;
+    var sql_query = mysql.format(SEARCH_SALARY_SPECIFIC_QUERY, inserts);
+    connection.query(sql_query, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
+}
+
+export function select_salary_between_amounts_query(params, callback) {
+    //Expecting params to be a list, with first entry being low salary and second entry being high salary.
+    var inserts = [params[0], params[1]];
+    var sql_query = mysql.format(SEARCH_SALARY_SPECIFIC_QUERY, inserts);
+    connection.query(sql_query, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
+}
+
+// Team record SQL functions
+export function select_team_wins_query(params, callback) {
+    var inserts = params;
+    var sql_query = mysql.format(TEAM_WINS_SQL, inserts);
+    connection.query(sql_query, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
+}
+
+export function select_team_losses_query(params, callback) {
+    var inserts = params;
+    var sql_query = mysql.format(TEAM_LOSSES_SQL, inserts);
+    connection.query(sql_query, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
+}
+
+export function select_team_ties_query(params, callback) {
+    var inserts = params;
+    var sql_query = mysql.format(TEAM_TIES_SQL, inserts);
+    connection.query(sql_query, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
+}
+
+// Etc functions
+export function num_players_per_pos_query(params, callback) {
+    connection.query(NUM_PLAYERS_PER_POS_SQL, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
+}
+
+export function sum_salaries_teams_query(params, callback) {
+    // Expecting a team name
+    var inserts = params;
+    var sql_query = mysql.format(SUM_OF_SALARIES_FOR_TEAM_SQL, inserts);
+    let count = 0;
+    while (count < 2) {
+        sql_query = sql_query.replace("'", "");
+        count++;
+    }
     connection.query(sql_query, function(error, results, fields) {
         if (error) throw error;
         callback(results);

@@ -49,7 +49,7 @@ module.exports = app => {
     })
   })
   app.get('/getPlayers/byTeam/:tName', (req,res) =>{
-    var newInserts = [req.params.tName ]
+    var newInserts = req.params.tName
     var players = db_conn.players_team_search_query(newInserts, function(data) {
       res.send(data);
     })
@@ -67,7 +67,7 @@ module.exports = app => {
     })
   })
   app.get('/getPlayers/:position', (req,res) =>{
-    var newInserts = [ req.params.position ]
+    var newInserts = req.params.position
     var players = db_conn.players_pos_search_query(newInserts, function(data) {
       res.send(data);
     })
@@ -146,7 +146,7 @@ module.exports = app => {
   app.get('/favPlayer/add/:id/:user', (req,res) =>{
     var newInserts = [ req.params.user, req.params.id ]
     var players = db_conn.update_favorite_player_query(newInserts, function(data) {
-      res.send(true);
+      res.send(data);
     })
   })
   app.get('/favPlayer/delete/:id/:user', (req,res) =>{
