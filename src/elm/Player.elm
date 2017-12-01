@@ -1,4 +1,4 @@
-module Player exposing (playerTable, fetchPlayers, addFavPlayer, fetchUserPlayers)
+module Player exposing (playerTable, fetchPlayers, addFavPlayer, fetchUserPlayers, fetchPlayersA)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -61,6 +61,23 @@ processPlayer from result =
 fetchUserPlayers : User -> Cmd Msg
 fetchUserPlayers user =
     Http.send (processPlayer "fav") <| Http.get ("http://localhost:3000/userPlayers/?username=" ++ user.username) (Decode.list decodePlayer)
+
+
+fetchPlayersA : Dict.Dict String String -> Cmd Msg
+fetchPlayersA dict =
+    let
+        ( query, searchType ) =
+            getAPQuery dict
+    in
+        case searchType of
+            "exact" ->
+                Http.send (processPlayer "norm") <| Http.get ("http://localhost:3000/aPlayers/exact/?exact=" ++ query.exact) (Decode.list decodePlayer)
+
+            "moreThan lessThan" ->
+                Http.send (processPlayer "norm") <| Http.get ("http://localhost:3000/aPlayers/between/?mt=" ++ query.mt ++ "&lt=" ++ query.lt) (Decode.list decodePlayer)
+
+            _ ->
+                Http.send (processPlayer "norm") <| Http.get "http://localhost:3000/getAllPlayers" (Decode.list decodePlayer)
 
 
 fetchPlayers : Dict.Dict String String -> Cmd Msg
@@ -136,6 +153,70 @@ type alias BasicPQ =
     , tN : String
     , p : String
     }
+
+
+type alias AdvancedPQ =
+    { exact : String
+    , mt : String
+    , lt : String
+    }
+
+
+getAPQuery : Dict.Dict String String -> ( AdvancedPQ, String )
+getAPQuery dict =
+    let
+        cleanDict =
+            Dict.fromList <| List.filter (\( x, y ) -> not <| String.isEmpty y) <| Dict.toList dict
+
+        temp2 =
+            Debug.log "clean" cleanDict
+
+        e =
+            Maybe.withDefault "0" <| Dict.get "salary.exact" cleanDict
+
+        mt =
+            Maybe.withDefault "0" <| Dict.get "salary.moreThan" cleanDict
+
+        lt =
+            Maybe.withDefault "10000000" <| Dict.get "salary.lessThan" cleanDict
+
+        list =
+            [ ( "exact", e )
+            , ( "moreThan", mt )
+            , ( "lessThan", lt )
+            ]
+
+        check =
+            if mt == "0" && lt == "10000000" then
+                False
+            else
+                True
+
+        temp =
+            Debug.log "list" list
+
+        typeOf =
+            if List.length (Dict.toList dict) < 1 then
+                "all"
+            else if check then
+                String.concat <|
+                    List.intersperse " " <|
+                        List.map Tuple.first <|
+                            List.filter
+                                (\( x, y ) -> (x == "moreThan" || x == "lessThan"))
+                                list
+            else
+                String.concat <|
+                    List.intersperse " " <|
+                        List.map Tuple.first <|
+                            List.filter
+                                (\( x, y ) -> (x /= "moreThan" && x /= "lessThan"))
+                                list
+
+        temp1 =
+            Debug.log "typead" typeOf
+    in
+        ( AdvancedPQ e mt lt, typeOf )
 
 
 getPQuery : Dict.Dict String String -> ( BasicPQ, String )

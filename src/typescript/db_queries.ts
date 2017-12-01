@@ -172,17 +172,32 @@ const SEARCH_SALARY_BETWEEN_QUERY: string = "SELECT players.player_ID, people.fi
                                         + "WHERE contract.salary BETWEEN ? AND ?;";
 
 // Team wins, losses, ties SQL calls
-const TEAM_WINS_SQL: string = "SELECT teams.name\n"
+const TEAM_WINS_SQL: string = "SELECT teams.teamID, teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, \" \", people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
                             + "FROM teams\n"
-                            + "WHERE teams.wins = ?;";
+                            + "INNER JOIN leagues ON teams.playsInLeague=leagues.leagueID\n"
+                            + "INNER JOIN stadiums ON teams.homeStadium=stadiums.stadiumID\n"
+                            + "INNER JOIN coaches ON teams.teamID=coaches.teamCoaching\n"
+                            + "INNER JOIN people ON coaches.coach_ID=people.people_ID\n"
+                            + "LEFT JOIN seasons ON teams.teamID=seasons.teamID\n"
+                            + "WHERE seasons.wins = ?;";
 
-const TEAM_LOSSES_SQL: string = "SELECT teams.name\n"
-                            + "FROM teams\n"
-                            + "WHERE teams.losses = ?;";
+const TEAM_LOSSES_SQL: string = "SELECT teams.teamID, teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, \" \", people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
+                                + "FROM teams\n"
+                                + "INNER JOIN leagues ON teams.playsInLeague=leagues.leagueID\n"
+                                + "INNER JOIN stadiums ON teams.homeStadium=stadiums.stadiumID\n"
+                                + "INNER JOIN coaches ON teams.teamID=coaches.teamCoaching\n"
+                                + "INNER JOIN people ON coaches.coach_ID=people.people_ID\n"
+                                + "LEFT JOIN seasons ON teams.teamID=seasons.teamID\n"
+                                + "WHERE seasons.losses = ?;";
 
-const TEAM_TIES_SQL: string = "SELECT teams.name\n"
+const TEAM_TIES_SQL: string = "SELECT teams.teamID, teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, \" \", people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
                             + "FROM teams\n"
-                            + "WHERE teams.ties = ?;";
+                            + "INNER JOIN leagues ON teams.playsInLeague=leagues.leagueID\n"
+                            + "INNER JOIN stadiums ON teams.homeStadium=stadiums.stadiumID\n"
+                            + "INNER JOIN coaches ON teams.teamID=coaches.teamCoaching\n"
+                            + "INNER JOIN people ON coaches.coach_ID=people.people_ID\n"
+                            + "LEFT JOIN seasons ON teams.teamID=seasons.teamID\n"
+                            + "WHERE seasons.ties = ?;";
 
 // Number of players per position
 const NUM_PLAYERS_PER_POS_SQL: string = "SELECT players.position, COUNT(*) as num_at_position\n"
@@ -311,7 +326,6 @@ export function user_players_query(params, callback) {
     //Expecting first two params to be name params, third to be position param, and fourth to be team param.
     var inserts = params;
     var sql_query = mysql.format(SELECT_USER_PLAYER_QUERY, inserts);
-    console.log(sql_query)
     connection.query(sql_query, function(error, results, fields) {
         if (error) throw error;
         callback(results);
@@ -406,7 +420,6 @@ export function check_login_query(params, callback) {
     var sql_query = mysql.format(CHECK_LOGIN_QUERY, inserts);
     connection.query(sql_query, function(error, results, fields) {
         if (error) throw error;
-        console.log(results)
         callback(results);
     })
 }
@@ -416,7 +429,6 @@ export function update_favorite_player_query(params, callback) {
     //Expecting params to be two variables, first a username and second a playerID.
     var inserts = [params[0], parseInt(params[1])];
     var sql_query = mysql.format(INSERT_FAVORITE_USER_PLAYER_QUERY, inserts);
-    console.log(sql_query)
     connection.query(sql_query, function(error, results, fields) {
         if (error) throw error;
         callback(results);
@@ -468,6 +480,12 @@ export function select_salary_exact_amount_query(params, callback) {
     //Expecting params to be one variable, a salary.
     var inserts = params;
     var sql_query = mysql.format(SEARCH_SALARY_SPECIFIC_QUERY, inserts);
+    // var count = 0;
+    // while (count < 2) {
+    //     sql_query = sql_query.replace("'", "");
+    //     count++;
+    // }
+    console.log(sql_query)
     connection.query(sql_query, function(error, results, fields) {
         if (error) throw error;
         callback(results);
@@ -476,8 +494,14 @@ export function select_salary_exact_amount_query(params, callback) {
 
 export function select_salary_between_amounts_query(params, callback) {
     //Expecting params to be a list, with first entry being low salary and second entry being high salary.
-    var inserts = [params[0], params[1]];
-    var sql_query = mysql.format(SEARCH_SALARY_SPECIFIC_QUERY, inserts);
+    var inserts = params;
+    var sql_query = mysql.format(SEARCH_SALARY_BETWEEN_QUERY, inserts);
+    // var count = 0;
+    // while (count < 2) {
+    //     sql_query = sql_query.replace("'", "");
+    //     count++;
+    // }
+    console.log(sql_query)
     connection.query(sql_query, function(error, results, fields) {
         if (error) throw error;
         callback(results);

@@ -13,6 +13,7 @@ view which searches =
     div []
         [ formView searches
         , Button.linkButton [ Button.onClick (Search which), Button.primary ] [ text "Search" ]
+        , Button.linkButton [ Button.onClick (SearchAdvanced which), Button.primary ] [ text "Advanced Search" ]
         ]
 
 
@@ -39,6 +40,19 @@ numberView name =
         ]
 
 
+exactView : String -> Html Msg
+exactView name =
+    div [ class "row" ]
+        [ div [ class "col-12" ] [ label [] [ text name ] ]
+        , div [ class "col-12" ]
+            [ div [ class "row" ]
+                [ div [ class "col-1" ] [ text "Exact" ]
+                , div [ class "col-2" ] [ Input.number [ Input.attrs [ onInput (((,) name) >> ExactInput) ] ] ]
+                ]
+            ]
+        ]
+
+
 formView : List ( String, List ( String, SearchType ) ) -> Html Msg
 formView params =
     div [] <| List.map displaySection params
@@ -60,3 +74,6 @@ displayBasedOnType ( key, t ) =
 
         Number ->
             numberView key
+
+        Exact ->
+            exactView key

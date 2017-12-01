@@ -49,7 +49,6 @@ module.exports = app => {
     })
   })
   app.get('/getPlayers/byTeamName/', (req,res) =>{
-    console.log(req.query.name)
     var newInserts = req.query.name
     var players = db_conn.players_team_search_query(newInserts, function(data) {
       res.send(data);
@@ -158,6 +157,43 @@ module.exports = app => {
       else{
         res.send(data);
       }
+    })
+  })
+
+  //playerExact
+  app.get('/aPlayers/exact/', (req,res) =>{
+    var newInserts = parseInt(req.query.exact)
+    var players = db_conn.select_salary_exact_amount_query(newInserts, function(data) {
+      res.send(data);
+    })
+  })
+
+  app.get('/aPlayers/between/', (req,res) => {
+    var newInserts = [req.query.mt, req.query.lt]
+    var players = db_conn.select_salary_between_amounts_query(newInserts, function(data) {
+      res.send(data);
+    })
+  })
+
+
+  app.get('/aTeams/wins/', (req,res) => {
+    var newInserts = req.query.wins
+    var players = db_conn.select_team_wins_query(newInserts, function(data) {
+      res.send(data);
+    })
+  })
+
+  app.get('/aTeams/losses/', (req,res) => {
+    var newInserts = req.query.losses
+    var players = db_conn.select_team_losses_query(newInserts, function(data) {
+      res.send(data);
+    })
+  })
+
+  app.get('/aTeams/ties/', (req,res) => {
+    var newInserts = req.query.ties
+    var players = db_conn.select_team_ties_query(newInserts, function(data) {
+      res.send(data);
     })
   })
   

@@ -79,10 +79,13 @@ update msg model =
             in
                 case typeOf of
                     "team" ->
-                        ( { model | teamQuery = Dict.insert newKey value model.teamQuery }, Cmd.none )
+                        if (newKey == "wins" || newKey == "losses" || newKey == "ties") then
+                            ( { model | teamQuery = Dict.insert "advancedTeam" (value ++ "." ++ newKey) model.teamQuery }, Cmd.none )
+                        else
+                            ( { model | teamQuery = Dict.insert (newKey ++ ".exact") value model.teamQuery }, Cmd.none )
 
                     "player" ->
-                        ( { model | playerQuery = Dict.insert newKey value model.playerQuery }, Cmd.none )
+                        ( { model | playerQuery = Dict.insert (newKey ++ ".exact") value model.playerQuery }, Cmd.none )
 
                     _ ->
                         ( model, Cmd.none )
@@ -100,10 +103,10 @@ update msg model =
             in
                 case typeOf of
                     "team" ->
-                        ( { model | teamQuery = Dict.insert newKey value model.teamQuery }, Cmd.none )
+                        ( { model | teamQuery = Dict.insert (newKey ++ ".moreThan") value model.teamQuery }, Cmd.none )
 
                     "player" ->
-                        ( { model | playerQuery = Dict.insert newKey value model.playerQuery }, Cmd.none )
+                        ( { model | playerQuery = Dict.insert (newKey ++ ".moreThan") value model.playerQuery }, Cmd.none )
 
                     _ ->
                         ( model, Cmd.none )
@@ -121,10 +124,10 @@ update msg model =
             in
                 case typeOf of
                     "team" ->
-                        ( { model | teamQuery = Dict.insert newKey value model.teamQuery }, Cmd.none )
+                        ( { model | teamQuery = Dict.insert (newKey ++ ".lessThan") value model.teamQuery }, Cmd.none )
 
                     "player" ->
-                        ( { model | playerQuery = Dict.insert newKey value model.playerQuery }, Cmd.none )
+                        ( { model | playerQuery = Dict.insert (newKey ++ ".lessThan") value model.playerQuery }, Cmd.none )
 
                     _ ->
                         ( model, Cmd.none )
@@ -177,6 +180,21 @@ update msg model =
 
                         "team" ->
                             Team.fetchTeams model.teamQuery
+
+                        _ ->
+                            Cmd.none
+            in
+                ( model, cmd )
+
+        SearchAdvanced which ->
+            let
+                cmd =
+                    case which of
+                        "player" ->
+                            Player.fetchPlayersA model.playerQuery
+
+                        "team" ->
+                            Team.fetchTeamsA model.teamQuery
 
                         _ ->
                             Cmd.none

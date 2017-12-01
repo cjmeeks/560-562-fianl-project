@@ -9,6 +9,7 @@ import Bootstrap.Form.Input as Input
 import Bootstrap.Button as Button
 import Http
 import Dict
+import Array
 
 
 teamTable : Bool -> List Team -> Html Msg
@@ -100,6 +101,26 @@ processTeam result =
             HandleError err
 
 
+fetchTeamsA : Dict.Dict String String -> Cmd Msg
+fetchTeamsA dict =
+    let
+        ( query, searchType ) =
+            getATQuery dict
+    in
+        case searchType of
+            "wins" ->
+                Http.send processTeam <| Http.get ("http://localhost:3000/aTeams/wins/?wins=" ++ query.wins) (Decode.list decodeTeam)
+
+            "losses" ->
+                Http.send processTeam <| Http.get ("http://localhost:3000/aTeams/losses/?losses=" ++ query.losses) (Decode.list decodeTeam)
+
+            "ties" ->
+                Http.send processTeam <| Http.get ("http://localhost:3000/aTeams/ties/?ties=" ++ query.ties) (Decode.list decodeTeam)
+
+            _ ->
+                Http.send processTeam <| Http.get "http://localhost:3000/getAllTeams" (Decode.list decodeTeam)
+
+
 fetchTeams : Dict.Dict String String -> Cmd Msg
 fetchTeams dict =
     let
@@ -156,3 +177,31 @@ getTQuery dict =
                 String.concat <| List.intersperse " " <| List.map Tuple.first <| List.filter (\( x, y ) -> y /= "nothing") list
     in
         ( BasicTQ t l, typeOf )
+
+
+type alias AdvancedTQ =
+    { wins : String
+    , losses : String
+    , ties : String
+    }
+
+
+getATQuery : Dict.Dict String String -> ( AdvancedTQ, String )
+getATQuery dict =
+    let
+        cleanDict =
+            Dict.fromList <| List.filter (\( x, y ) -> not <| String.isEmpty y) <| Dict.toList dict
+
+        t =
+            Maybe.withDefault "nothing" <| Dict.get "advancedTeam" cleanDict
+
+        split =
+            String.split "." t
+
+        q =
+            Maybe.withDefault "error" <| Array.get 0 <| Array.fromList split
+
+        key =
+            Maybe.withDefault "error" <| Array.get 1 <| Array.fromList split
+    in
+        ( AdvancedTQ q q q, key )

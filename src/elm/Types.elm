@@ -85,6 +85,7 @@ decodeTeam =
 type SearchType
     = Like
     | Number
+    | Exact
 
 
 playerSearches : List ( String, List ( String, SearchType ) )
@@ -96,6 +97,10 @@ playerSearches =
         , ( "player.position", Like )
         ]
       )
+    , ( "Advanced"
+      , [ ( "player.salary", Number )
+        ]
+      )
     ]
 
 
@@ -104,6 +109,12 @@ teamSearches =
     [ ( "Team"
       , [ ( "team.teamName", Like )
         , ( "team.league", Like )
+        ]
+      )
+    , ( "Advanced"
+      , [ ( "team.wins", Exact )
+        , ( "team.losses", Exact )
+        , ( "team.ties", Exact )
         ]
       )
     ]
@@ -175,6 +186,7 @@ type Msg
     | HandlePlayers String (List Player)
     | HandleError Http.Error
     | Search String
+    | SearchAdvanced String
     | Username String
     | Password String
     | LoginButton
