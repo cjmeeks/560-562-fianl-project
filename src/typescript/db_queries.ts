@@ -84,7 +84,7 @@ const SELECT_ALL_TEAMS_QUERY: string = "SELECT teams.teamID, teams.name,leagues.
                                     + "INNER JOIN stadiums ON teams.homeStadium=stadiums.stadiumID\n"
                                     + "INNER JOIN coaches ON teams.teamID=coaches.teamCoaching\n"
                                     + "INNER JOIN people ON coaches.coach_ID=people.people_ID\n"
-                                    + "INNER JOIN seasons ON teams.teamID=seasons.teamID;";
+                                    + "LEFT JOIN seasons ON teams.teamID=seasons.teamID;";
 
 const SELECT_TEAM_NAME_QUERY: string = "SELECT teams.teamID, teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, \" \", people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
                                     + "FROM teams\n"
@@ -92,7 +92,7 @@ const SELECT_TEAM_NAME_QUERY: string = "SELECT teams.teamID, teams.name,leagues.
                                     + "INNER JOIN stadiums ON teams.homeStadium=stadiums.stadiumID\n"
                                     + "INNER JOIN coaches ON teams.teamID=coaches.teamCoaching\n"
                                     + "INNER JOIN people ON coaches.coach_ID=people.people_ID\n"
-                                    + "INNER JOIN seasons ON teams.teamID=seasons.teamID\n"
+                                    + "LEFT JOIN seasons ON teams.teamID=seasons.teamID\n"
                                     + "WHERE teams.name LIKE \"%?%\";";
 
 const SELECT_TEAM_LEAGUE_QUERY: string = "SELECT teams.teamID, teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, \" \", people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
@@ -101,7 +101,7 @@ const SELECT_TEAM_LEAGUE_QUERY: string = "SELECT teams.teamID, teams.name,league
                                     + "INNER JOIN stadiums ON teams.homeStadium=stadiums.stadiumID\n"
                                     + "INNER JOIN coaches ON teams.teamID=coaches.teamCoaching\n"
                                     + "INNER JOIN people ON coaches.coach_ID=people.people_ID\n"
-                                    + "INNER JOIN seasons ON teams.teamID=seasons.teamID\n"
+                                    + "LEFT JOIN seasons ON teams.teamID=seasons.teamID\n"
                                     + "WHERE leagues.name LIKE \"%?%\";";
 
 const SELECT_TEAM_NAME_LEAGUE_QUERY: string = "SELECT teams.teamID, teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, \" \", people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
@@ -110,7 +110,7 @@ const SELECT_TEAM_NAME_LEAGUE_QUERY: string = "SELECT teams.teamID, teams.name,l
                                     + "INNER JOIN stadiums ON teams.homeStadium=stadiums.stadiumID\n"
                                     + "INNER JOIN coaches ON teams.teamID=coaches.teamCoaching\n"
                                     + "INNER JOIN people ON coaches.coach_ID=people.people_ID\n"
-                                    + "INNER JOIN seasons ON teams.teamID=seasons.teamID\n"
+                                    + "LEFT JOIN seasons ON teams.teamID=seasons.teamID\n"
                                     + "WHERE (teams.name LIKE \"%?%\") AND (leagues.name LIKE \"%?%\");";
 
 // Sign in and Login SQL Calls
@@ -125,16 +125,14 @@ const INSERT_NEW_USER_QUERY: string = "INSERT INTO users(username, password)\n"
                                     + "VALUES(?, ?);";
 
 // User interaction SQL Calls
-const UPDATE_FAVORITE_USER_PLAYER_QUERY: string = "UPDATE users\n"
-                                                + "SET favoritePlayer = ?\n"
-                                                + "WHERE users.username LIKE \"?\";";
+const INSERT_FAVORITE_USER_PLAYER_QUERY: string = "INSERT INTO user_favorite_players(username,favoritePlayer)\n"
+                                                + "VALUES(?, ?);"
+
+const DELETE_FAVORITE_USER_PLAYER_QUERY: string = "DELETE FROM user_favorite_players\n"
+                                                + "WHERE (username LIKE \"?\") AND (favoritePlayer = ?);"
 
 const UPDATE_FAVORITE_USER_TEAM_QUERY: string = "UPDATE users\n"
                                                 + "SET favoriteTeam = ?\n"
-                                                + "WHERE users.username LIKE \"?\";";
-
-const DELETE_FAVORITE_USER_PLAYER_QUERY: string = "UPDATE users\n"
-                                                + "SET favoritePlayer = NULL\n"
                                                 + "WHERE users.username LIKE \"?\";";
 
 const DELETE_FAVORITE_USER_TEAM_QUERY: string = "UPDATE users\n"
@@ -337,14 +335,9 @@ export function check_login_query(params, callback) {
 
 // User interaction SQL Calls.
 export function update_favorite_player_query(params, callback) {
-    //Expecting params to be two variables, first a playerid and second a username.
+    //Expecting params to be two variables, first a username and second a playerID.
     var inserts = [params[0], params[1]];
-    var sql_query = mysql.format(UPDATE_FAVORITE_USER_PLAYER_QUERY, inserts);
-    let count = 0;
-    while (count < 2) {
-        sql_query = sql_query.replace("'", "");
-        count++;
-    }
+    var sql_query = mysql.format(INSERT_FAVORITE_USER_PLAYER_QUERY, inserts);
     connection.query(sql_query, function(error, results, fields) {
         if (error) throw error;
         callback(results);
@@ -367,9 +360,14 @@ export function update_favoite_team_query(params, callback) {
 }
 
 export function delete_favorite_player_query(params, callback) {
-    //Expecting params to be one variable, a username.
-    var inserts = params;
+    //Expecting params to be two variables, a username and a playerID.
+    var inserts = [params[0], params[1]];
     var sql_query = mysql.format(DELETE_FAVORITE_USER_PLAYER_QUERY, inserts);
+    let count = 0;
+    while (count < 2) {
+        sql_query = sql_query.replace("'", "");
+        count++;
+    }
     connection.query(sql_query, function(error, results, fields) {
         if (error) throw error;
         callback(results);

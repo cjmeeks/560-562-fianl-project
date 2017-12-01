@@ -147,13 +147,13 @@ module.exports = app => {
   //favorite
 
   app.get('/favPlayer/add/:id/:user', (req,res) =>{
-    var newInserts = [ req.params.id, req.params.user ]
+    var newInserts = [ req.params.user, req.params.id ]
     var players = db_conn.update_favorite_player_query(newInserts, function(data) {
       res.send(true);
     })
   })
   app.get('/favPlayer/delete/:id/:user', (req,res) =>{
-    var newInserts = [ req.params.id, req.params.user ]
+    var newInserts = [ req.params.user, req.params.id ]
     var players = db_conn.delete_favorite_player_query(newInserts, function(data) {
       res.send(true);
     })
@@ -166,7 +166,7 @@ module.exports = app => {
     })
   })
   app.get('/favTeam/delete/:id/:user', (req,res) =>{
-    var newInserts = [ req.params.id, req.params.user ]
+    var newInserts = req.params.user
     var players = db_conn.delete_favorite_team_query(newInserts, function(data) {
       res.send(true);
     })
