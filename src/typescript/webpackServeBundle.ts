@@ -102,7 +102,7 @@ module.exports = app => {
   })
 
   app.get('/getTeams/byTeamLeague/', (req,res) =>{
-    var newInserts = [ req.query.teamName, req.query.league ]
+    var newInserts = [ req.query.tName, req.query.league ]
     var teams = db_conn.teams_name_league_search_query(newInserts, function(data) {
       res.send(data);
     })
@@ -142,12 +142,32 @@ module.exports = app => {
     })
   })
 
+  app.get('/userPlayers/', (req,res) =>{
+    var newInserts = req.query.username
+    var players = db_conn.user_players_query(newInserts, function(data) {
+      res.send(data);
+    })
+  })
+
+  app.get('/userTeam/', (req,res) =>{
+    var newInserts = parseInt(req.query.tid)
+    var players = db_conn.user_team_query(newInserts, function(data) {
+      if(data[0]) {
+        res.send(data[0]);
+      }
+      else{
+        res.send(data);
+      }
+    })
+  })
+  
+
   //favorite
 
   app.get('/favPlayer/add/:id/:user', (req,res) =>{
     var newInserts = [ req.params.user, req.params.id ]
     var players = db_conn.update_favorite_player_query(newInserts, function(data) {
-      res.send(data);
+      res.send(true);
     })
   })
   app.get('/favPlayer/delete/:id/:user', (req,res) =>{

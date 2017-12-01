@@ -171,7 +171,8 @@ type Msg
     | DeleteTeam Team
     | DeletePlayer Player
     | HandleTeams (List Team)
-    | HandlePlayers (List Player)
+    | HandleFavTeam Team
+    | HandlePlayers String (List Player)
     | HandleError Http.Error
     | Search String
     | Username String

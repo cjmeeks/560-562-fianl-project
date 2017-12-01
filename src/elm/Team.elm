@@ -56,20 +56,35 @@ addFavTeam : String -> Int -> User -> Cmd Msg
 addFavTeam typeof id user =
     case typeof of
         "add" ->
-            Http.send processFavTeam <| Http.get ("http://localhost:3000/favTeam/add/" ++ (toString id) ++ "/" ++ user.username) Decode.bool
+            Http.send processUpdateFavTeam <| Http.get ("http://localhost:3000/favTeam/add/" ++ (toString id) ++ "/" ++ user.username) Decode.bool
 
         "delete" ->
-            Http.send processFavTeam <| Http.get ("http://localhost:3000/favTeam/delete/" ++ (toString id) ++ "/" ++ user.username) Decode.bool
+            Http.send processUpdateFavTeam <| Http.get ("http://localhost:3000/favTeam/delete/" ++ (toString id) ++ "/" ++ user.username) Decode.bool
 
         _ ->
-            Http.send processFavTeam <| Http.get ("http://localhost:3000/favTeam/add/" ++ (toString id) ++ "/" ++ user.username) Decode.bool
+            Http.send processUpdateFavTeam <| Http.get ("http://localhost:3000/favTeam/add/" ++ (toString id) ++ "/" ++ user.username) Decode.bool
 
 
-processFavTeam : Result Http.Error Bool -> Msg
-processFavTeam result =
+fetchUserTeam : User -> Cmd Msg
+fetchUserTeam user =
+    Http.send processFavTeam <| Http.get ("http://localhost:3000/userTeam/?tid=" ++ toString user.favoriteTeam) decodeTeam
+
+
+processUpdateFavTeam : Result Http.Error Bool -> Msg
+processUpdateFavTeam result =
     case result of
         Ok players ->
             HandleFav players
+
+        Err err ->
+            HandleError err
+
+
+processFavTeam : Result Http.Error Team -> Msg
+processFavTeam result =
+    case result of
+        Ok teams ->
+            HandleFavTeam teams
 
         Err err ->
             HandleError err

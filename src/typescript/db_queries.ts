@@ -82,7 +82,8 @@ const SELECT_USER_PLAYER_QUERY: string = "SELECT players.player_ID, people.first
                                         + "INNER JOIN players ON people.people_ID=players.player_ID\n"
                                         + "INNER JOIN contract ON people.people_ID=contract.player_ID\n"
                                         + "INNER JOIN teams ON contract.teamID=teams.teamID\n"
-                                        + "WHERE players.player_ID = ?;";
+                                        + "INNER JOIN user_favorite_players ON players.player_id=user_favorite_players.favoritePlayer\n"
+                                        + "WHERE user_favorite_players.username = ?;";
 
 // Team Queries
 const SELECT_ALL_TEAMS_QUERY: string = "SELECT teams.teamID, teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, \" \", people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
@@ -119,6 +120,15 @@ const SELECT_TEAM_NAME_LEAGUE_QUERY: string = "SELECT teams.teamID, teams.name,l
                                     + "INNER JOIN people ON coaches.coach_ID=people.people_ID\n"
                                     + "LEFT JOIN seasons ON teams.teamID=seasons.teamID\n"
                                     + "WHERE (teams.name LIKE \"%?%\") AND (leagues.name LIKE \"%?%\");";
+
+const SELECT_TEAM_ID_QUERY: string = "SELECT teams.teamID, teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, \" \", people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
+                                    + "FROM teams\n"
+                                    + "INNER JOIN leagues ON teams.playsInLeague=leagues.leagueID\n"
+                                    + "INNER JOIN stadiums ON teams.homeStadium=stadiums.stadiumID\n"
+                                    + "INNER JOIN coaches ON teams.teamID=coaches.teamCoaching\n"
+                                    + "INNER JOIN people ON coaches.coach_ID=people.people_ID\n"
+                                    + "LEFT JOIN seasons ON teams.teamID=seasons.teamID\n"
+                                    + "WHERE teams.teamID = ?;";
 
 // Sign in and Login SQL Calls
 const CHECK_IF_USERNAME_EXISTS_QUERY: string = "SELECT users.username\n"
@@ -301,11 +311,7 @@ export function user_players_query(params, callback) {
     //Expecting first two params to be name params, third to be position param, and fourth to be team param.
     var inserts = params;
     var sql_query = mysql.format(SELECT_USER_PLAYER_QUERY, inserts);
-    let count = 0;
-    while (count < 8) {
-        sql_query = sql_query.replace("'", "");
-        count++;
-    }
+    console.log(sql_query)
     connection.query(sql_query, function(error, results, fields) {
         if (error) throw error;
         callback(results);
@@ -360,6 +366,16 @@ export function teams_name_league_search_query(params, callback) {
         sql_query = sql_query.replace("'", "");
         count++;
     }
+    connection.query(sql_query, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
+}
+
+export function user_team_query(params, callback) {
+    //Expecting params to be a list with the first element being team name and second being team league.
+    var inserts = params;
+    var sql_query = mysql.format(SELECT_TEAM_ID_QUERY, inserts);
     connection.query(sql_query, function(error, results, fields) {
         if (error) throw error;
         callback(results);

@@ -147,8 +147,19 @@ update msg model =
         HandleTeams teams ->
             ( { model | teamResults = teams }, Cmd.none )
 
-        HandlePlayers players ->
-            ( { model | playerResults = players }, Cmd.none )
+        HandleFavTeam team ->
+            ( { model | favoriteTeam = team }, Cmd.none )
+
+        HandlePlayers from players ->
+            case from of
+                "fav" ->
+                    ( { model | favoritePlayers = players }, Cmd.none )
+
+                "norm" ->
+                    ( { model | playerResults = players }, Cmd.none )
+
+                _ ->
+                    ( { model | playerResults = players }, Cmd.none )
 
         HandleError err ->
             let
@@ -191,7 +202,7 @@ update msg model =
                 temp =
                     Debug.log "user" user
             in
-                ( { model | user = user, curPage = Profile }, Navigation.newUrl "#profile" )
+                ( { model | user = user, curPage = Profile }, Cmd.batch [ Navigation.newUrl "#profile", Player.fetchUserPlayers user, Team.fetchUserTeam user ] )
 
         HandleSignup user ->
             ( { model | user = user, curPage = Profile }, Navigation.newUrl "#login" )

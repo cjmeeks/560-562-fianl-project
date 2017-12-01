@@ -1,4 +1,4 @@
-module Player exposing (playerTable, fetchPlayers, addFavPlayer)
+module Player exposing (playerTable, fetchPlayers, addFavPlayer, fetchUserPlayers)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -48,14 +48,19 @@ playerRow bool p =
         ]
 
 
-processPlayer : Result Http.Error (List Player) -> Msg
-processPlayer result =
+processPlayer : String -> Result Http.Error (List Player) -> Msg
+processPlayer from result =
     case result of
         Ok players ->
-            HandlePlayers players
+            HandlePlayers from players
 
         Err err ->
             HandleError err
+
+
+fetchUserPlayers : User -> Cmd Msg
+fetchUserPlayers user =
+    Http.send (processPlayer "fav") <| Http.get ("http://localhost:3000/userPlayers/?username=" ++ user.username) (Decode.list decodePlayer)
 
 
 fetchPlayers : Dict.Dict String String -> Cmd Msg
@@ -69,37 +74,37 @@ fetchPlayers dict =
     in
         case searchType of
             "all" ->
-                Http.send processPlayer <| Http.get "http://localhost:3000/getAllPlayers" (Decode.list decodePlayer)
+                Http.send (processPlayer "norm") <| Http.get "http://localhost:3000/getAllPlayers" (Decode.list decodePlayer)
 
             "firstName" ->
-                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/" ++ query.fN ++ "/" ++ query.lN) (Decode.list decodePlayer)
+                Http.send (processPlayer "norm") <| Http.get ("http://localhost:3000/getPlayers/" ++ query.fN ++ "/" ++ query.lN) (Decode.list decodePlayer)
 
             "lastName" ->
-                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/" ++ query.fN ++ "/" ++ query.lN) (Decode.list decodePlayer)
+                Http.send (processPlayer "norm") <| Http.get ("http://localhost:3000/getPlayers/" ++ query.fN ++ "/" ++ query.lN) (Decode.list decodePlayer)
 
             "firstName lastName" ->
-                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/byFirstLast/?fName=" ++ query.fN ++ "&lName=" ++ query.lN) (Decode.list decodePlayer)
+                Http.send (processPlayer "norm") <| Http.get ("http://localhost:3000/getPlayers/byFirstLast/?fName=" ++ query.fN ++ "&lName=" ++ query.lN) (Decode.list decodePlayer)
 
             "firstName lastName teamName" ->
-                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/byFirstLastTeam/?fName=" ++ query.fN ++ "&lName=" ++ query.lN ++ "&teamName=" ++ query.tN) (Decode.list decodePlayer)
+                Http.send (processPlayer "norm") <| Http.get ("http://localhost:3000/getPlayers/byFirstLastTeam/?fName=" ++ query.fN ++ "&lName=" ++ query.lN ++ "&teamName=" ++ query.tN) (Decode.list decodePlayer)
 
             "firstName lastName teamName position" ->
-                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/byFLTP/?fName=" ++ query.fN ++ "&lName=" ++ query.lN ++ "&teamName=" ++ query.tN ++ "&position=" ++ query.p) (Decode.list decodePlayer)
+                Http.send (processPlayer "norm") <| Http.get ("http://localhost:3000/getPlayers/byFLTP/?fName=" ++ query.fN ++ "&lName=" ++ query.lN ++ "&teamName=" ++ query.tN ++ "&position=" ++ query.p) (Decode.list decodePlayer)
 
             "position" ->
-                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/byPos/?position=" ++ query.p) (Decode.list decodePlayer)
+                Http.send (processPlayer "norm") <| Http.get ("http://localhost:3000/getPlayers/byPos/?position=" ++ query.p) (Decode.list decodePlayer)
 
             "teamName position" ->
-                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/byTeamPos/?teamName=" ++ query.tN ++ "&position=" ++ query.p) (Decode.list decodePlayer)
+                Http.send (processPlayer "norm") <| Http.get ("http://localhost:3000/getPlayers/byTeamPos/?teamName=" ++ query.tN ++ "&position=" ++ query.p) (Decode.list decodePlayer)
 
             "teamName" ->
-                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/byTeamName/?name=" ++ query.tN) (Decode.list decodePlayer)
+                Http.send (processPlayer "norm") <| Http.get ("http://localhost:3000/getPlayers/byTeamName/?name=" ++ query.tN) (Decode.list decodePlayer)
 
             "firstName lastName position" ->
-                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/byFLPos/?fName=" ++ query.fN ++ "&lName=" ++ query.lN ++ "&position=" ++ query.p) (Decode.list decodePlayer)
+                Http.send (processPlayer "norm") <| Http.get ("http://localhost:3000/getPlayers/byFLPos/?fName=" ++ query.fN ++ "&lName=" ++ query.lN ++ "&position=" ++ query.p) (Decode.list decodePlayer)
 
             _ ->
-                Http.send processPlayer <| Http.get "http://localhost:3000/getAllPlayers" (Decode.list decodePlayer)
+                Http.send (processPlayer "norm") <| Http.get "http://localhost:3000/getAllPlayers" (Decode.list decodePlayer)
 
 
 addFavPlayer : String -> Int -> User -> Cmd Msg
