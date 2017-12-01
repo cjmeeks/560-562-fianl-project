@@ -94,7 +94,7 @@ module.exports = app => {
   })
 
   app.get('/getTeams/:tName', (req,res) =>{
-    var newInserts = req.params.teamName
+    var newInserts = req.params.tName
     var teams = db_conn.teams_name_search_query(newInserts, function(data) {
       res.send(data);
     })

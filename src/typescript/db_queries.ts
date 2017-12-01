@@ -78,7 +78,7 @@ const SELECT_PLAYER_NAME_TEAM_POS_QUERY: string = "SELECT players.player_ID, peo
                                         + "WHERE (people.firstName LIKE \"%?%\" OR people.lastName LIKE \"%?%\") AND (players.position LIKE \"%?%\") AND (teams.name LIKE \"%?%\");";
 
 // Team Queries
-const SELECT_ALL_TEAMS_QUERY: string = "SELECT teams.teamID, teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, ' ', people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
+const SELECT_ALL_TEAMS_QUERY: string = "SELECT teams.teamID, teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, \" \", people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
                                     + "FROM teams\n"
                                     + "INNER JOIN leagues ON teams.playsInLeague=leagues.leagueID\n"
                                     + "INNER JOIN stadiums ON teams.homeStadium=stadiums.stadiumID\n"
@@ -86,7 +86,7 @@ const SELECT_ALL_TEAMS_QUERY: string = "SELECT teams.teamID, teams.name,leagues.
                                     + "INNER JOIN people ON coaches.coach_ID=people.people_ID\n"
                                     + "INNER JOIN seasons ON teams.teamID=seasons.teamID;";
 
-const SELECT_TEAM_NAME_QUERY: string = "SELECT teams.teamID, teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, ' ', people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
+const SELECT_TEAM_NAME_QUERY: string = "SELECT teams.teamID, teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, \" \", people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
                                     + "FROM teams\n"
                                     + "INNER JOIN leagues ON teams.playsInLeague=leagues.leagueID\n"
                                     + "INNER JOIN stadiums ON teams.homeStadium=stadiums.stadiumID\n"
@@ -95,7 +95,7 @@ const SELECT_TEAM_NAME_QUERY: string = "SELECT teams.teamID, teams.name,leagues.
                                     + "INNER JOIN seasons ON teams.teamID=seasons.teamID\n"
                                     + "WHERE teams.name LIKE \"%?%\";";
 
-const SELECT_TEAM_LEAGUE_QUERY: string = "SELECT teams.teamID, teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, ' ', people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
+const SELECT_TEAM_LEAGUE_QUERY: string = "SELECT teams.teamID, teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, \" \", people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
                                     + "FROM teams\n"
                                     + "INNER JOIN leagues ON teams.playsInLeague=leagues.leagueID\n"
                                     + "INNER JOIN stadiums ON teams.homeStadium=stadiums.stadiumID\n"
@@ -104,7 +104,7 @@ const SELECT_TEAM_LEAGUE_QUERY: string = "SELECT teams.teamID, teams.name,league
                                     + "INNER JOIN seasons ON teams.teamID=seasons.teamID\n"
                                     + "WHERE leagues.name LIKE \"%?%\";";
 
-const SELECT_TEAM_NAME_LEAGUE_QUERY: string = "SELECT teams.teamID, teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, ' ', people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
+const SELECT_TEAM_NAME_LEAGUE_QUERY: string = "SELECT teams.teamID, teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, \" \", people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
                                     + "FROM teams\n"
                                     + "INNER JOIN leagues ON teams.playsInLeague=leagues.leagueID\n"
                                     + "INNER JOIN stadiums ON teams.homeStadium=stadiums.stadiumID\n"
