@@ -127,7 +127,7 @@ decodeUser =
 
 
 type alias Model =
-    { favoriteTeams : List Team
+    { favoriteTeam : Team
     , teamResults : List Team
     , favoritePlayers : List Player
     , playerResults : List Player
@@ -141,7 +141,7 @@ type alias Model =
 
 initModel : Model
 initModel =
-    { favoriteTeams = []
+    { favoriteTeam = Team 0 "" "" "" 0 "" 0 0 0
     , teamResults = []
     , favoritePlayers = []
     , playerResults = []

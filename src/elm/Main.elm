@@ -127,13 +127,13 @@ update msg model =
             ( { model | favoritePlayers = List.append model.favoritePlayers [ player ] }, Player.addFavPlayer "add" player.id model.user )
 
         AddTeam team ->
-            ( { model | favoriteTeams = List.append model.favoriteTeams [ team ] }, Team.addFavTeam "add" team.id model.user )
+            ( { model | favoriteTeam = team }, Team.addFavTeam "add" team.id model.user )
 
         DeletePlayer player ->
             ( { model | favoritePlayers = List.filter (\x -> x.firstName /= player.firstName && x.lastName /= player.lastName) model.favoritePlayers }, Player.addFavPlayer "delete" player.id model.user )
 
         DeleteTeam team ->
-            ( { model | favoriteTeams = List.filter (\x -> x.name /= team.name) model.favoriteTeams }, Team.addFavTeam "delete" team.id model.user )
+            ( { model | favoriteTeam = Team 0 "" "" "" 0 "" 0 0 0 }, Team.addFavTeam "delete" team.id model.user )
 
         HandleTeams teams ->
             ( { model | teamResults = teams }, Cmd.none )
@@ -198,7 +198,7 @@ view model =
             div [ class "my-container" ]
                 [ nav
                 , div [] [ text "profile" ]
-                , Team.teamTable False model.favoriteTeams
+                , Team.teamTable False [ model.favoriteTeam ]
                 , Player.playerTable False model.favoritePlayers
                 ]
 

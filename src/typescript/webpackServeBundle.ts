@@ -48,6 +48,12 @@ module.exports = app => {
       res.send(data);
     })
   })
+  app.get('/getPlayers/byTeam/:tName', (req,res) =>{
+    var newInserts = [req.params.tName ]
+    var players = db_conn.players_team_search_query(newInserts, function(data) {
+      res.send(data);
+    })
+  })
   app.get('/getPlayers/:fName/:lName/:teamName', (req,res) =>{
     var newInserts = [req.params.fName, req.params.lName, req.params.teamName ]
     var players = db_conn.players_team_and_name_search_query(newInserts, function(data) {

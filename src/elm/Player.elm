@@ -92,6 +92,9 @@ fetchPlayers dict =
             "teamName position" ->
                 Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/tp/" ++ query.tN ++ "/" ++ query.p) (Decode.list decodePlayer)
 
+            "teamName" ->
+                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/byTeam/" ++ query.tN) (Decode.list decodePlayer)
+
             "firstName lastName position" ->
                 Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/flp/" ++ query.fN ++ "/" ++ query.lN ++ "/" ++ query.p) (Decode.list decodePlayer)
 
@@ -133,17 +136,26 @@ type alias BasicPQ =
 getPQuery : Dict.Dict String String -> ( BasicPQ, String )
 getPQuery dict =
     let
+        temp1 =
+            Debug.log "dict" dict
+
+        cleanDict =
+            Dict.fromList <| List.filter (\( x, y ) -> not <| String.isEmpty y) <| Dict.toList dict
+
+        temp2 =
+            Debug.log "clean" cleanDict
+
         f =
-            Maybe.withDefault "nothing" <| Dict.get "firstName" dict
+            Maybe.withDefault "nothing" <| Dict.get "firstName" cleanDict
 
         l =
-            Maybe.withDefault "nothing" <| Dict.get "lastName" dict
+            Maybe.withDefault "nothing" <| Dict.get "lastName" cleanDict
 
         t =
-            Maybe.withDefault "nothing" <| Dict.get "teamName" dict
+            Maybe.withDefault "nothing" <| Dict.get "teamName" cleanDict
 
         p =
-            Maybe.withDefault "nothing" <| Dict.get "position" dict
+            Maybe.withDefault "nothing" <| Dict.get "position" cleanDict
 
         list =
             [ ( "firstName", f )
