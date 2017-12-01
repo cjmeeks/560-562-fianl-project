@@ -5,7 +5,7 @@ export function filler() {
 }
 
 //Checks to see if the username is in use. Returns true if it is and false if it isn't
-export function checkUsername(usernameToCheck, password) {
+export function checkUsername(usernameToCheck, password, callback) {
     var users = db_conn.get_username_query(function(data) {
         for (let result of data) {
             if (result === usernameToCheck) {

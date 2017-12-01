@@ -317,7 +317,7 @@ export function insert_new_user_query(params, callback) {
     //Expecting params to be a list with two params, username and password
     var inserts = [params[0], params[1]];
     var sql_query = mysql.format(INSERT_NEW_USER_QUERY, inserts);
-    connection.query(INSERT_NEW_USER_QUERY, function(error, results, fields) {
+    connection.query(sql_query, function(error, results, fields) {
         if (error) throw error;
         callback(results);
     })
@@ -327,7 +327,7 @@ export function check_login_query(params, callback) {
     //Expecting params to be a list with two params, username and password
     var inserts = [params[0], params[1]];
     var sql_query = mysql.format(CHECK_LOGIN_QUERY, inserts);
-    connection.query(CHECK_LOGIN_QUERY, function(error, results, fields) {
+    connection.query(sql_query, function(error, results, fields) {
         if (error) throw error;
         callback(results);
     })

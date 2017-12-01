@@ -130,19 +130,16 @@ module.exports = app => {
 
   //Login Endpoints
   app.get('/signup/:username/:password', (req, res) => {
-    userLoginSignup.filler();
-    //The value passed will have to be changed.
-    userLoginSignup.checkUsername("bob", "password");
-  })
-
-  app.get('/login/:user/:password', (req, res) => {
-    userLoginSignup.filler();
-    userLoginSignup.checkLogin(req.params.user, req.params.password, function(data) {
+    userLoginSignup.checkUsername(req.params.username, req.params.password, function(data) {
       res.send(data);
     })
   })
 
-
+  app.get('/login/:user/:password', (req, res) => {
+    userLoginSignup.checkLogin(req.params.user, req.params.password, function(data) {
+      res.send(data);
+    })
+  })
 
   //favorite
 

@@ -13,6 +13,7 @@ import Team
 import Dict
 import Array
 import Login
+import Signup
 
 
 main : Program Never Model Msg
@@ -180,8 +181,14 @@ update msg model =
         HandleUser user ->
             ( { model | user = user, curPage = Profile }, Cmd.none )
 
+        HandleSignup user ->
+            ( { model | user = user, curPage = Profile }, Cmd.none )
+
         LoginButton ->
             ( model, Login.loginCall model.user )
+
+        SignupButton ->
+            ( model, Signup.signupCall model.user )
 
         HandleFav bool ->
             let
@@ -197,7 +204,7 @@ view model =
         Profile ->
             div [ class "my-container" ]
                 [ nav
-                , div [] [ text "profile" ]
+                , div [] [ text "Current User Logged in: " ]
                 , Team.teamTable False [ model.favoriteTeam ]
                 , Player.playerTable False model.favoritePlayers
                 ]
@@ -223,6 +230,13 @@ view model =
                 , Login.loginView
                 ]
 
+        SignUp ->
+            div [ class "my-container" ]
+                [ h1 [] [ text "Sign Up Page" ]
+                , CDN.stylesheet
+                , Signup.signupView
+                ]
+
 
 nav : Html Msg
 nav =
@@ -232,5 +246,6 @@ nav =
             [ li [] [ a [ href "#profile" ] [ text "Profile" ] ]
             , li [] [ a [ href "#players" ] [ text "Player Search" ] ]
             , li [] [ a [ href "#teams" ] [ text "Team Search" ] ]
+            , li [] [ a [ href "#signup" ] [ text "Sign up" ] ]
             ]
         ]

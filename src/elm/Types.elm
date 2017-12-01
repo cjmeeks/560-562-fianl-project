@@ -179,3 +179,5 @@ type Msg
     | LoginButton
     | HandleUser User
     | HandleFav Bool
+    | SignupButton
+    | HandleSignup User
