@@ -96,13 +96,13 @@ fetchTeams dict =
                 Http.send processTeam <| Http.get "http://localhost:3000/getAllTeams" (Decode.list decodeTeam)
 
             "teamName" ->
-                Http.send processTeam <| Http.get ("http://localhost:3000/getTeams/" ++ query.name) (Decode.list decodeTeam)
+                Http.send processTeam <| Http.get ("http://localhost:3000/getTeams/byName/?tName=" ++ query.name) (Decode.list decodeTeam)
 
             "teamName league" ->
-                Http.send processTeam <| Http.get ("http://localhost:3000/getTeams/" ++ query.name ++ "/" ++ query.league) (Decode.list decodeTeam)
+                Http.send processTeam <| Http.get ("http://localhost:3000/getTeams/byTeamLeague/?tName=" ++ query.name ++ "&league=" ++ query.league) (Decode.list decodeTeam)
 
             "league" ->
-                Http.send processTeam <| Http.get ("http://localhost:3000/getTeams/league/" ++ query.league) (Decode.list decodeTeam)
+                Http.send processTeam <| Http.get ("http://localhost:3000/getTeams/byLeague/?league=" ++ query.league) (Decode.list decodeTeam)
 
             _ ->
                 Http.send processTeam <| Http.get "http://localhost:3000/getAllTeams" (Decode.list decodeTeam)
@@ -117,11 +117,14 @@ type alias BasicTQ =
 getTQuery : Dict.Dict String String -> ( BasicTQ, String )
 getTQuery dict =
     let
+        cleanDict =
+            Dict.fromList <| List.filter (\( x, y ) -> not <| String.isEmpty y) <| Dict.toList dict
+
         t =
-            Maybe.withDefault "nothing" <| Dict.get "teamName" dict
+            Maybe.withDefault "nothing" <| Dict.get "teamName" cleanDict
 
         l =
-            Maybe.withDefault "nothing" <| Dict.get "league" dict
+            Maybe.withDefault "nothing" <| Dict.get "league" cleanDict
 
         list =
             [ ( "teamName", t )
@@ -132,7 +135,7 @@ getTQuery dict =
             Debug.log "list" list
 
         typeOf =
-            if List.length (Dict.toList dict) < 1 then
+            if List.length (Dict.toList cleanDict) < 1 then
                 "all"
             else
                 String.concat <| List.intersperse " " <| List.map Tuple.first <| List.filter (\( x, y ) -> y /= "nothing") list

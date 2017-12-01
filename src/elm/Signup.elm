@@ -11,8 +11,8 @@ import Json.Decode as Decode
 import Http
 
 
-signupView: Html Msg
-signupView = 
+signupView : Html Msg
+signupView =
     div [ class "signup-container" ]
         [ Group.config (Group.text [ Input.attrs [ onInput Username ] ])
             |> Group.predecessors
@@ -29,7 +29,7 @@ signupView =
             [ text "Sign Up" ]
         ]
 
-    
+
 signupCall : User -> Cmd Msg
 signupCall user =
     Http.send processSignup <| Http.get ("http://localhost:3000/signup/" ++ user.username ++ "/" ++ user.password) decodeUser

@@ -77,6 +77,13 @@ const SELECT_PLAYER_NAME_TEAM_POS_QUERY: string = "SELECT players.player_ID, peo
                                         + "INNER JOIN teams ON contract.teamID=teams.teamID\n"
                                         + "WHERE (people.firstName LIKE \"%?%\" OR people.lastName LIKE \"%?%\") AND (players.position LIKE \"%?%\") AND (teams.name LIKE \"%?%\");";
 
+const SELECT_USER_PLAYER_QUERY: string = "SELECT players.player_ID, people.firstName,people.lastName,players.position,players.number,contract.salary,teams.name\n"
+                                        + "FROM people\n"
+                                        + "INNER JOIN players ON people.people_ID=players.player_ID\n"
+                                        + "INNER JOIN contract ON people.people_ID=contract.player_ID\n"
+                                        + "INNER JOIN teams ON contract.teamID=teams.teamID\n"
+                                        + "WHERE players.player_ID = ?;";
+
 // Team Queries
 const SELECT_ALL_TEAMS_QUERY: string = "SELECT teams.teamID, teams.name,leagues.name as leagueName,stadiums.city,teams.yearFounded, concat(people.firstName, \" \", people.lastName) as coachName, seasons.wins, seasons.losses, seasons.ties\n"
                                     + "FROM teams\n"
@@ -119,7 +126,7 @@ const CHECK_IF_USERNAME_EXISTS_QUERY: string = "SELECT users.username\n"
 
 const CHECK_LOGIN_QUERY: string = "SELECT *\n"
                                 + "FROM users\n"
-                                + "WHERE users.username = \"?\" AND users.password = \"?\";";
+                                + "WHERE ((users.username LIKE ?) AND (users.password LIKE ?));";
 
 const INSERT_NEW_USER_QUERY: string = "INSERT INTO users(username, password)\n"
                                     + "VALUES(?, ?);";
@@ -203,7 +210,7 @@ export function players_name_search_query(params, callback) {
 
 export function players_team_search_query(params, callback) {
     //Expecting params to be a single variable.
-    var inserts = params;
+    var inserts = [params];
     var sql_query = mysql.format(SELECT_PLAYER_TEAM_QUERY, inserts);
     let count = 0;
     while (count < 2) {
@@ -290,6 +297,21 @@ export function players_team_name_and_pos_search_query(params, callback) {
         callback(results);
     })
 }
+export function user_players_query(params, callback) {
+    //Expecting first two params to be name params, third to be position param, and fourth to be team param.
+    var inserts = params;
+    var sql_query = mysql.format(SELECT_USER_PLAYER_QUERY, inserts);
+    let count = 0;
+    while (count < 8) {
+        sql_query = sql_query.replace("'", "");
+        count++;
+    }
+    connection.query(sql_query, function(error, results, fields) {
+        if (error) throw error;
+        callback(results);
+    })
+}
+
 
 // Teams SQL Calls
 export function teams_query(callback) {
@@ -368,6 +390,7 @@ export function check_login_query(params, callback) {
     var sql_query = mysql.format(CHECK_LOGIN_QUERY, inserts);
     connection.query(sql_query, function(error, results, fields) {
         if (error) throw error;
+        console.log(results)
         callback(results);
     })
 }
@@ -375,8 +398,9 @@ export function check_login_query(params, callback) {
 // User interaction SQL Calls.
 export function update_favorite_player_query(params, callback) {
     //Expecting params to be two variables, first a username and second a playerID.
-    var inserts = [params[0], params[1]];
+    var inserts = [params[0], parseInt(params[1])];
     var sql_query = mysql.format(INSERT_FAVORITE_USER_PLAYER_QUERY, inserts);
+    console.log(sql_query)
     connection.query(sql_query, function(error, results, fields) {
         if (error) throw error;
         callback(results);
@@ -385,7 +409,7 @@ export function update_favorite_player_query(params, callback) {
 
 export function update_favoite_team_query(params, callback) {
     //Expecting params to be two variables, first a teamID and second a username.
-    var inserts = [params[0], params[1]];
+    var inserts = [parseInt(params[0]), params[1]];
     var sql_query = mysql.format(UPDATE_FAVORITE_USER_TEAM_QUERY, inserts);
     let count = 0;
     while (count < 2) {
@@ -400,7 +424,7 @@ export function update_favoite_team_query(params, callback) {
 
 export function delete_favorite_player_query(params, callback) {
     //Expecting params to be two variables, a username and a playerID.
-    var inserts = [params[0], params[1]];
+    var inserts = [params[0], parseInt(params[1])];
     var sql_query = mysql.format(DELETE_FAVORITE_USER_PLAYER_QUERY, inserts);
     let count = 0;
     while (count < 2) {

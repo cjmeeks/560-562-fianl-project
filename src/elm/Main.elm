@@ -21,7 +21,7 @@ main =
     Navigation.program UrlChange
         { init = init
         , view = view
-        , update = update
+        , update = fakeAuth
         , subscriptions = (\_ -> Sub.none)
         }
 
@@ -29,6 +29,14 @@ main =
 init : Navigation.Location -> ( Model, Cmd Msg )
 init loc =
     ( { initModel | curPage = parseLocation loc }, Cmd.batch [ Team.fetchTeams Dict.empty, Player.fetchPlayers Dict.empty ] )
+
+
+fakeAuth : Msg -> Model -> ( Model, Cmd Msg )
+fakeAuth msg model =
+    if (String.isEmpty model.user.username) && (String.isEmpty model.user.password) && (model.curPage /= Login) then
+        ( model, Cmd.batch [ Navigation.newUrl "#login", Navigation.reload ] )
+    else
+        update msg model
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -179,10 +187,14 @@ update msg model =
                 ( { model | user = { user | password = password } }, Cmd.none )
 
         HandleUser user ->
-            ( { model | user = user, curPage = Profile }, Cmd.none )
+            let
+                temp =
+                    Debug.log "user" user
+            in
+                ( { model | user = user, curPage = Profile }, Navigation.newUrl "#profile" )
 
         HandleSignup user ->
-            ( { model | user = user, curPage = Profile }, Cmd.none )
+            ( { model | user = user, curPage = Profile }, Navigation.newUrl "#login" )
 
         LoginButton ->
             ( model, Login.loginCall model.user )
@@ -204,9 +216,21 @@ view model =
         Profile ->
             div [ class "my-container" ]
                 [ nav
-                , div [] [ text "Current User Logged in: " ]
-                , Team.teamTable False [ model.favoriteTeam ]
-                , Player.playerTable False model.favoritePlayers
+                , div [] [ text ("Current User Logged in: " ++ model.user.username) ]
+                , div []
+                    [ h3 [] [ text "Favorite Team: " ]
+                    , if model.favoriteTeam.id == 0 then
+                        text "no Favorite Team"
+                      else
+                        Team.teamTable False [ model.favoriteTeam ]
+                    ]
+                , div []
+                    [ h3 [] [ text "Favorite Players" ]
+                    , if model.favoritePlayers == [] then
+                        text "no Favorite players"
+                      else
+                        Player.playerTable False model.favoritePlayers
+                    ]
                 ]
 
         TeamResult ->

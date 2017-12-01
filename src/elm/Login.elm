@@ -27,6 +27,7 @@ loginView =
             , Button.onClick LoginButton
             ]
             [ text "Login" ]
+        , li [] [ a [ href "#signup" ] [ text "Sign Up" ] ]
         ]
 
 

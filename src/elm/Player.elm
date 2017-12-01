@@ -78,25 +78,25 @@ fetchPlayers dict =
                 Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/" ++ query.fN ++ "/" ++ query.lN) (Decode.list decodePlayer)
 
             "firstName lastName" ->
-                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/" ++ query.fN ++ "/" ++ query.lN) (Decode.list decodePlayer)
+                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/byFirstLast/?fName=" ++ query.fN ++ "&lName=" ++ query.lN) (Decode.list decodePlayer)
 
             "firstName lastName teamName" ->
-                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/" ++ query.fN ++ "/" ++ query.lN ++ "/" ++ query.tN) (Decode.list decodePlayer)
+                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/byFirstLastTeam/?fName=" ++ query.fN ++ "&lName=" ++ query.lN ++ "&teamName=" ++ query.tN) (Decode.list decodePlayer)
 
             "firstName lastName teamName position" ->
-                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/" ++ query.fN ++ "/" ++ query.lN ++ "/" ++ query.tN ++ "/" ++ query.p) (Decode.list decodePlayer)
+                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/byFLTP/?fName=" ++ query.fN ++ "&lName=" ++ query.lN ++ "&teamName=" ++ query.tN ++ "&position=" ++ query.p) (Decode.list decodePlayer)
 
             "position" ->
-                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/" ++ query.p) (Decode.list decodePlayer)
+                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/byPos/?position=" ++ query.p) (Decode.list decodePlayer)
 
             "teamName position" ->
-                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/tp/" ++ query.tN ++ "/" ++ query.p) (Decode.list decodePlayer)
+                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/byTeamPos/?teamName=" ++ query.tN ++ "&position=" ++ query.p) (Decode.list decodePlayer)
 
             "teamName" ->
-                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/byTeam/" ++ query.tN) (Decode.list decodePlayer)
+                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/byTeamName/?name=" ++ query.tN) (Decode.list decodePlayer)
 
             "firstName lastName position" ->
-                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/flp/" ++ query.fN ++ "/" ++ query.lN ++ "/" ++ query.p) (Decode.list decodePlayer)
+                Http.send processPlayer <| Http.get ("http://localhost:3000/getPlayers/byFLPos/?fName=" ++ query.fN ++ "&lName=" ++ query.lN ++ "&position=" ++ query.p) (Decode.list decodePlayer)
 
             _ ->
                 Http.send processPlayer <| Http.get "http://localhost:3000/getAllPlayers" (Decode.list decodePlayer)
@@ -164,6 +164,12 @@ getPQuery dict =
             , ( "position", p )
             ]
 
+        check =
+            if f == "nothing" && l == "nothing" then
+                False
+            else
+                True
+
         temp =
             Debug.log "list" list
 
@@ -171,6 +177,16 @@ getPQuery dict =
             if List.length (Dict.toList dict) < 1 then
                 "all"
             else
-                String.concat <| List.intersperse " " <| List.map Tuple.first <| List.filter (\( x, y ) -> y /= "nothing") list
+                String.concat <|
+                    List.intersperse " " <|
+                        List.map Tuple.first <|
+                            List.filter
+                                (\( x, y ) ->
+                                    if check && (x == "firstName" || x == "lastName") then
+                                        True
+                                    else
+                                        y /= "nothing"
+                                )
+                                list
     in
         ( BasicPQ f l t p, typeOf )

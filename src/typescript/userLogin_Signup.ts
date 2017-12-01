@@ -27,6 +27,7 @@ function createNewUser(username, password) {
 export function checkLogin(usernameToCheck, passwordToCheck, callback) {
     let params = [usernameToCheck, passwordToCheck];
     var checkedUser = db_conn.check_login_query(params, function(data) {
+        console.log(["here", data])
         callback(data);
     })
 }

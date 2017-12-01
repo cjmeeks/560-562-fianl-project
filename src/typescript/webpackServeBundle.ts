@@ -42,45 +42,46 @@ module.exports = app => {
     })
   })
   //this route needs to check if fname or lname = "nothing" then do query off of that
-  app.get('/getPlayers/:fName/:lName', (req,res) =>{
-    var newInserts = [req.params.fName, req.params.lName ]
+  app.get('/getPlayers/byFirstLast/', (req,res) =>{
+    var newInserts = [req.query.fName, req.query.lName ]
     var players = db_conn.players_name_search_query(newInserts, function(data) {
       res.send(data);
     })
   })
-  app.get('/getPlayers/byTeam/:tName', (req,res) =>{
-    var newInserts = req.params.tName
+  app.get('/getPlayers/byTeamName/', (req,res) =>{
+    console.log(req.query.name)
+    var newInserts = req.query.name
     var players = db_conn.players_team_search_query(newInserts, function(data) {
       res.send(data);
     })
   })
-  app.get('/getPlayers/:fName/:lName/:teamName', (req,res) =>{
-    var newInserts = [req.params.fName, req.params.lName, req.params.teamName ]
+  app.get('/getPlayers/byFirstLastTeam/', (req,res) =>{
+    var newInserts = [req.query.fName, req.query.lName, req.query.teamName ]
     var players = db_conn.players_team_and_name_search_query(newInserts, function(data) {
       res.send(data);
     })
   })
-  app.get('/getPlayers/:fName/:lName/:teamName/:position', (req,res) =>{
-    var newInserts = [req.params.fName, req.params.lName, req.params.teamName, req.params.position ]
+  app.get('/getPlayers/byFLTP/', (req,res) =>{
+    var newInserts = [req.query.fName, req.query.lName, req.query.teamName, req.query.position ]
     var players = db_conn.players_team_name_and_pos_search_query(newInserts, function(data) {
       res.send(data);
     })
   })
-  app.get('/getPlayers/:position', (req,res) =>{
-    var newInserts = req.params.position
+  app.get('/getPlayers/byPos', (req,res) =>{
+    var newInserts = req.query.position
     var players = db_conn.players_pos_search_query(newInserts, function(data) {
       res.send(data);
     })
   })
-  app.get('/getPlayers/tp/:teamName/:position', (req,res) =>{
-    var newInserts = [ req.params.teamName, req.params.position ]
+  app.get('/getPlayers/byTeamPos/', (req,res) =>{
+    var newInserts = [ req.query.teamName, req.query.position ]
     var players = db_conn.players_team_pos_search_query(newInserts, function(data) {
       res.send(data);
     })
   })
 
-  app.get('/getPlayers/flp/:fName/:lName/:position', (req,res) =>{
-    var newInserts = [req.params.fName, req.params.lName, req.params.position ]
+  app.get('/getPlayers/byFLPos/', (req,res) =>{
+    var newInserts = [req.query.fName, req.query.lName, req.query.position ]
     var players = db_conn.players_name_pos_search_query(newInserts, function(data) {
       res.send(data);
     })
@@ -93,22 +94,22 @@ module.exports = app => {
     })
   })
 
-  app.get('/getTeams/:tName', (req,res) =>{
-    var newInserts = req.params.tName
+  app.get('/getTeams/byName/', (req,res) =>{
+    var newInserts = req.query.tName
     var teams = db_conn.teams_name_search_query(newInserts, function(data) {
       res.send(data);
     })
   })
 
-  app.get('/getTeams/:tName/:league', (req,res) =>{
-    var newInserts = [ req.params.teamName, req.params.league ]
+  app.get('/getTeams/byTeamLeague/', (req,res) =>{
+    var newInserts = [ req.query.teamName, req.query.league ]
     var teams = db_conn.teams_name_league_search_query(newInserts, function(data) {
       res.send(data);
     })
   })
   //need to have diff route when same number of params given
-  app.get('/getTeams/league/:league', (req,res) =>{
-    var newInserts = req.params.league
+  app.get('/getTeams/byLeague/', (req,res) =>{
+    var newInserts = req.query.league
     var teams = db_conn.teams_league_search_query(newInserts, function(data) {
       res.send(data);
     })
@@ -137,7 +138,7 @@ module.exports = app => {
 
   app.get('/login/:user/:password', (req, res) => {
     userLoginSignup.checkLogin(req.params.user, req.params.password, function(data) {
-      res.send(data);
+      res.send(data[0]);
     })
   })
 
@@ -167,18 +168,6 @@ module.exports = app => {
     var players = db_conn.delete_favorite_team_query(newInserts, function(data) {
       res.send(true);
     })
-  })
-
-  //Test Endpoints
-  app.get('/testEndpoint', (req, res) => {
-    var inserts = ["erso", "erso", "Sporting"];
-    var players = db_conn.players_team_and_name_search_query(inserts, function(data) {
-      res.send(data);
-    })
-  })
-
-  app.get('/hello', (req,res) =>{
-    res.send('helloWorld ' + req.query.name)
   })
 }
 
